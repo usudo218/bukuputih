@@ -1112,14 +1112,14 @@
     <button class="nav-btn" id="nextBtn" onclick="navigateBook(1)">Selanjutnya →</button>
   </div>
 
-  <script>
+ <script>
     const allPages = document.querySelectorAll('.page');
     const allSpreads = document.querySelectorAll('.spread-viewport');
-    const totalPages = allPages.length; // 20 Halaman individu (Cover sampai Hal 19)
-    const totalSpreads = allSpreads.length; // 10 Bentangan
+    const totalPages = allPages.length; 
+    const totalSpreads = allSpreads.length;
     
-    let currentSinglePage = 0; // Index 0..19 untuk HP/Tablet
-    let currentSpread = 0;     // Index 0..9 untuk Desktop
+    let currentSinglePage = 0; 
+    let currentSpread = 0;     
 
     const pageIndicator = document.getElementById('pageIndicator');
 
@@ -1129,7 +1129,6 @@
 
     function renderView() {
       if (isMobileMode()) {
-        // Mode HP: Aktifkan viewport induk dan halaman tunggal terkait
         allSpreads.forEach(spread => spread.classList.remove('desktop-active', 'mobile-active-parent'));
         allPages.forEach((page, idx) => {
           const isActive = (idx === currentSinglePage);
@@ -1144,7 +1143,6 @@
           }
         });
       } else {
-        // Mode Desktop: Tampilkan bentangan 2 halaman sekaligus
         allPages.forEach(p => p.classList.remove('mobile-active-page'));
         allSpreads.forEach((spread, sIdx) => {
           const isActive = (sIdx === currentSpread);
@@ -1172,14 +1170,14 @@
         const next = currentSinglePage + direction;
         if (next >= 0 && next < totalPages) {
           currentSinglePage = next;
-          currentSpread = Math.floor(currentSinglePage / 2); // Sinkronkan ke desktop jika di-resize
+          currentSpread = Math.floor(currentSinglePage / 2);
           renderView();
         }
       } else {
         const next = currentSpread + direction;
         if (next >= 0 && next < totalSpreads) {
           currentSpread = next;
-          currentSinglePage = currentSpread * 2; // Sinkronkan ke halaman awal bentangan
+          currentSinglePage = currentSpread * 2;
           renderView();
         }
       }
@@ -1194,7 +1192,7 @@
       }
     });
 
-    // Navigasi Klik Sisi Layar (Kiri untuk Mundur, Kanan untuk Maju)
+    // Navigasi Klik Sisi Layar
     document.getElementById('bookStage').addEventListener('click', (e) => {
       if (e.target.closest('.article-scroll-container')) return;
       const rect = e.currentTarget.getBoundingClientRect();
@@ -1206,15 +1204,27 @@
       }
     });
 
-    // Navigasi Touch / Swipe untuk HP & Tablet
+    // Navigasi Touch / Swipe yang Aman dari Scrolling Vertikal
     let startX = 0;
+    let startY = 0;
+    let isTouchOnScrollable = false;
+
     window.addEventListener('touchstart', (e) => {
       startX = e.changedTouches[0].screenX;
+      startY = e.changedTouches[0].screenY;
+      // Deteksi jika sentuhan terjadi di area teks yang bisa di-scroll
+      isTouchOnScrollable = Boolean(e.target.closest('.article-scroll-container'));
     }, { passive: true });
 
     window.addEventListener('touchend', (e) => {
+      // Jika sentuhan berada di area teks, matikan gesture swipe halaman
+      if (isTouchOnScrollable) return;
+
       const diffX = startX - e.changedTouches[0].screenX;
-      if (Math.abs(diffX) > 40) {
+      const diffY = startY - e.changedTouches[0].screenY;
+
+      // Hanya pindah halaman jika gerakan murni geseran horizontal (diffX dominan atas diffY)
+      if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 60) {
         if (diffX > 0) {
           navigateBook(1);
         } else {
@@ -1223,7 +1233,6 @@
       }
     }, { passive: true });
 
-    // Dengarkan Resize Jendela (Transisi mulus antar orientasi layar)
     window.addEventListener('resize', () => {
       renderView();
     });
