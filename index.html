@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BUKU PUTIH: Catatan Harian Seorang Guru yang Katanya Sudah Profesional</title>
+  <title>BUKU PUTIH: Catatan Harian Seorang Guru yag Katanya Sudah Profesional</title>
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -18,6 +18,7 @@
       --ink-dim: #6d6457;
       --merah-bata: #a83624;
       --hijau-kusam: #314235;
+      --hijau-muda: #e4ebe6;
       --paper-line: #dfd3bd;
     }
 
@@ -108,6 +109,106 @@
       padding-left: 42px;
     }
 
+    /* ================= COVER KHUSUS (TANPA NOMOR HALAMAN) ================= */
+    .cover-pane {
+      background: var(--hijau-kusam);
+      color: #fff;
+      padding: 32px 36px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      position: relative;
+    }
+
+    .cover-pane .badge {
+      display: inline-block;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      font-size: 0.64rem;
+      font-weight: 700;
+      background: var(--merah-bata);
+      padding: 3px 12px;
+      border-radius: 20px;
+      margin-bottom: 6px;
+    }
+
+    .cover-pane h1 {
+      font-family: 'Cinzel', serif;
+      font-size: 2.1rem;
+      line-height: 1.05;
+      letter-spacing: 1.5px;
+      margin-bottom: 4px;
+      color: #fff;
+      border: none;
+      padding: 0;
+    }
+
+    .cover-pane h2 {
+      font-family: 'Crimson Pro', serif;
+      font-style: italic;
+      font-size: 0.95rem;
+      font-weight: 400;
+      color: var(--hijau-muda);
+      line-height: 1.35;
+      max-width: 360px;
+      margin: 0 auto;
+    }
+
+    .cover-portrait-box {
+      width: 44mm;
+      height: 56mm;
+      margin: 10px auto;
+      border: 2px solid rgba(255, 255, 255, 0.25);
+      border-radius: 6px;
+      padding: 3px;
+      background: rgba(0, 0, 0, 0.3);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+    }
+
+    .cover-portrait-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 4px;
+      display: block;
+      filter: contrast(1.05);
+    }
+
+    .cover-stats {
+      display: flex;
+      justify-content: center;
+      gap: 1.8rem;
+      border-top: 1px solid rgba(255,255,255,0.2);
+      border-bottom: 1px solid rgba(255,255,255,0.2);
+      padding: 8px 0;
+      width: 100%;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    .cover-stats .item .num {
+      display: block;
+      font-size: 1.25rem;
+      font-weight: 700;
+    }
+
+    .cover-stats .item .lbl {
+      font-size: 0.62rem;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      color: var(--hijau-muda);
+    }
+
+    .cover-bottom p {
+      font-size: 0.74rem;
+      color: #d2ded5;
+      text-align: center;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      line-height: 1.35;
+    }
+
     /* ================= HALAMAN KIRI: FULL SKETSA ================= */
     .illustration-card {
       flex: 1;
@@ -164,7 +265,7 @@
       margin-bottom: 2px;
     }
 
-    /* ================= HALAMAN KANAN: TEKS NARASI FULL ================= */
+    /* ================= HALAMAN KANAN: TEKS NARASI ================= */
     .article-scroll-container {
       flex: 1;
       overflow-y: auto;
@@ -350,6 +451,9 @@
         padding-left: 20px;
         padding-right: 20px;
       }
+      .cover-pane {
+        padding: 30px 20px;
+      }
       .sketch-viewport {
         min-height: 280px;
       }
@@ -366,8 +470,56 @@
 
   <div id="bookStage">
 
-    <!-- BENTANGAN BAB 01 -->
+    <!-- BENTANGAN 00: COVER & PENGANTAR (COVER TANPA NOMOR HALAMAN) -->
     <div class="spread-viewport active">
+      <div class="book-spine"></div>
+      
+      <!-- Halaman Kiri: Cover Utama Buku -->
+      <div class="page cover-pane">
+        <div class="cover-header">
+          <div class="badge">Catatan Harian</div>
+          <h1>BUKU PUTIH</h1>
+          <h2>Catatan Harian dari Guru yang Katanya Sudah Profesional</h2>
+        </div>
+
+        <div class="cover-portrait-box">
+          <img src="images/cover.png" alt="Cover Ilustrasi Potret Buku Putih">
+        </div>
+
+        <div class="cover-stats">
+          <div class="item"><span class="num">36</span><span class="lbl">Murid</span></div>
+          <div class="item"><span class="num">1</span><span class="lbl">Guru</span></div>
+          <div class="item"><span class="num">8</span><span class="lbl">Janji</span></div>
+        </div>
+
+        <div class="cover-bottom">
+          <p>Sembilan bab tentang slogan, fasilitas, digitalisasi, dan kenyataan yang sering lupa ikut rapat.</p>
+        </div>
+      </div>
+
+      <!-- Halaman Kanan: Pengantar Editorial -->
+      <div class="page page-right">
+        <div class="article-scroll-container">
+          <div class="chapter-badge">Prolog</div>
+          <h1>Inilah...</h1>
+          
+          <p class="lead-paragraph">Sebuah perjalanan melewati kelas yang penuh slogan, kursi yang tidak ramah pinggang, ruang rapat yang berubah menjadi kelas, digitalisasi yang tersandung koneksi, dan murid yang sebenarnya bisa—tetapi memilih diam.</p>
+          
+          <div class="editorial-box" style="margin: 2rem 0; padding: 1.2rem;">
+            <strong>Palet & Tipografi Editorial</strong>
+            Palet utama: krem kertas, hijau kusam, hitam, merah bata.<br>
+            Tipografi: serif editorial + sans-serif modern.<br>
+            Bahasa visual: serius di permukaan, satir di dalam.
+          </div>
+          
+          <p>Buku ini ditulis bukan untuk menggugat kurikulum di atas mimbar seminar, melainkan untuk merekam dengus napas, spidol yang sekarat, dan siasat-siasat kecil bertahan hidup di ruang kelas sebelum lonceng tanda pulang berdentang.</p>
+        </div>
+        <div class="page-footer">01</div>
+      </div>
+    </div>
+
+    <!-- BENTANGAN BAB 01 -->
+    <div class="spread-viewport">
       <div class="book-spine"></div>
       
       <div class="page page-left">
@@ -918,7 +1070,7 @@
   <!-- Kontrol Navigasi -->
   <div class="book-navigation">
     <button class="nav-btn" id="prevBtn" onclick="turnSpread(-1)">← Sebelumnya</button>
-    <span id="pageIndicator">Bab 01 dari 09</span>
+    <span id="pageIndicator">Cover & Pengantar</span>
     <button class="nav-btn" id="nextBtn" onclick="turnSpread(1)">Selanjutnya →</button>
   </div>
 
@@ -932,10 +1084,14 @@
       spreads.forEach((spread, idx) => {
         spread.classList.toggle('active', idx === currentSpread);
       });
-      const babNumber = String(currentSpread + 1).padStart(2, '0');
-      pageIndicator.textContent = `Bab ${babNumber} dari 09`;
       
-      // Kembalikan posisi scroll narasi ke atas setiap kali ganti bab
+      if (currentSpread === 0) {
+        pageIndicator.textContent = "Cover & Pengantar";
+      } else {
+        const babNumber = String(currentSpread).padStart(2, '0');
+        pageIndicator.textContent = `Bab ${babNumber} dari 09`;
+      }
+      
       const scrollable = spreads[currentSpread].querySelector('.article-scroll-container');
       if (scrollable) scrollable.scrollTop = 0;
     }
@@ -948,7 +1104,6 @@
       }
     }
 
-    // Navigasi Keyboard
     window.addEventListener('keydown', (e) => {
       if (e.key === 'ArrowRight' || e.key === 'PageDown') {
         turnSpread(1);
@@ -957,9 +1112,7 @@
       }
     });
 
-    // Navigasi Klik Sisi Luar Buku
     document.getElementById('bookStage').addEventListener('click', (e) => {
-      // Abaikan jika klik terjadi di dalam area scroll narasi teks agar tidak mengganggu scrolling
       if (e.target.closest('.article-scroll-container')) return;
 
       const rect = e.currentTarget.getBoundingClientRect();
@@ -971,7 +1124,6 @@
       }
     });
 
-    // Navigasi Usap Layar (Swipe Gesture Touch)
     let startX = 0;
     window.addEventListener('touchstart', (e) => {
       startX = e.changedTouches[0].screenX;
