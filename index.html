@@ -47,7 +47,9 @@
     .spread-viewport {
       display: none;
       width: 100%;
-      max-width: 1100px;
+      max-width: 1120px;
+      height: 88vh;
+      max-height: 720px;
       background-color: var(--paper-cream);
       border-radius: 6px;
       position: relative;
@@ -86,23 +88,24 @@
     /* Pengaturan Halaman */
     .page {
       flex: 1;
-      padding: 44px 50px;
-      min-height: 620px;
+      height: 100%;
+      padding: 38px 46px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
       position: relative;
+      overflow: hidden;
     }
 
     .page-left {
       background: linear-gradient(to right, #fbf8f0 91%, var(--paper-shadow) 100%);
-      padding-right: 48px;
+      padding-right: 42px;
       border-right: 1px solid rgba(0,0,0,0.05);
     }
 
     .page-right {
       background: linear-gradient(to left, #fbf8f0 91%, var(--paper-shadow) 100%);
-      padding-left: 48px;
+      padding-left: 42px;
     }
 
     /* ================= HALAMAN KIRI: FULL SKETSA ================= */
@@ -116,12 +119,13 @@
       border-radius: 4px;
       padding: 16px;
       box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.04);
+      min-height: 0;
     }
 
     .sketch-viewport {
       flex: 1;
       width: 100%;
-      min-height: 380px;
+      min-height: 0;
       border: 1px solid #dcd0b8;
       border-radius: 2px;
       overflow: hidden;
@@ -147,6 +151,7 @@
       margin-top: 12px;
       font-weight: 500;
       line-height: 1.35;
+      flex-shrink: 0;
     }
 
     .sketch-caption span {
@@ -159,7 +164,24 @@
       margin-bottom: 2px;
     }
 
-    /* ================= HALAMAN KANAN: TEKS NARASI ================= */
+    /* ================= HALAMAN KANAN: TEKS NARASI FULL ================= */
+    .article-scroll-container {
+      flex: 1;
+      overflow-y: auto;
+      padding-right: 12px;
+      margin-bottom: 10px;
+      scrollbar-width: thin;
+      scrollbar-color: #dfd3bd transparent;
+    }
+
+    .article-scroll-container::-webkit-scrollbar {
+      width: 4px;
+    }
+    .article-scroll-container::-webkit-scrollbar-thumb {
+      background: #dfd3bd;
+      border-radius: 4px;
+    }
+
     .chapter-badge {
       font-family: 'Plus Jakarta Sans', sans-serif;
       font-size: 0.72rem;
@@ -172,12 +194,12 @@
 
     h1 {
       font-family: 'Cinzel', Georgia, serif;
-      font-size: 1.7rem;
+      font-size: 1.6rem;
       color: var(--hijau-kusam);
       line-height: 1.15;
-      margin-bottom: 14px;
+      margin-bottom: 12px;
       border-bottom: 1px solid #e5dac5;
-      padding-bottom: 10px;
+      padding-bottom: 8px;
     }
 
     .official-quote {
@@ -203,13 +225,13 @@
     }
 
     p {
-      font-size: 1.05rem;
-      line-height: 1.55;
+      font-size: 1.02rem;
+      line-height: 1.56;
       color: var(--ink-black);
       text-align: justify;
       text-justify: inter-word;
       margin-bottom: 12px;
-      text-indent: 26px;
+      text-indent: 24px;
     }
 
     p.lead-paragraph::first-letter {
@@ -229,25 +251,36 @@
       text-align: center;
       border-top: 1px dashed #d5c7b0;
       border-bottom: 1px dashed #d5c7b0;
-      padding: 7px 12px;
-      margin: 12px 0;
+      padding: 8px 12px;
+      margin: 14px 0;
       background: rgba(49, 66, 53, 0.05);
+      text-indent: 0;
+    }
+
+    .editorial-box strong {
+      display: block;
+      color: var(--merah-bata);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-size: 0.62rem;
+      margin-bottom: 2px;
     }
 
     .chapter-end-box {
       background: #edf3ee;
       border-radius: 4px;
-      padding: 10px 14px;
+      padding: 12px 14px;
       border-left: 3px solid var(--hijau-kusam);
-      font-size: 0.88rem;
-      line-height: 1.45;
-      margin-top: 10px;
+      font-size: 0.9rem;
+      line-height: 1.48;
+      margin-top: 14px;
+      text-indent: 0;
     }
 
     .chapter-end-box strong {
       display: block;
       font-family: 'Plus Jakarta Sans', sans-serif;
-      font-size: 0.62rem;
+      font-size: 0.65rem;
       text-transform: uppercase;
       letter-spacing: 1.5px;
       color: var(--hijau-kusam);
@@ -263,6 +296,7 @@
       font-weight: 700;
       border-top: 1px solid #ebd9c3;
       padding-top: 8px;
+      flex-shrink: 0;
     }
 
     /* Bar Navigasi Bawah Layar */
@@ -295,8 +329,12 @@
       border-color: var(--merah-bata);
     }
 
-    /* Responsif Mobile & Tablet Kecil */
+    /* Responsif Mobile & Tablet */
     @media (max-width: 860px) {
+      .spread-viewport {
+        height: auto;
+        max-height: none;
+      }
       .spread-viewport.active {
         flex-direction: column;
       }
@@ -305,7 +343,7 @@
       }
       .page {
         min-height: auto;
-        padding: 30px 22px;
+        padding: 26px 20px;
       }
       .page-left, .page-right {
         background: var(--paper-cream);
@@ -313,10 +351,10 @@
         padding-right: 20px;
       }
       .sketch-viewport {
-        min-height: 260px;
+        min-height: 280px;
       }
       h1 {
-        font-size: 1.5rem;
+        font-size: 1.45rem;
       }
       p {
         text-align: left;
@@ -332,7 +370,6 @@
     <div class="spread-viewport active">
       <div class="book-spine"></div>
       
-      <!-- Halaman Kiri (Sketsa Bab 01) -->
       <div class="page page-left">
         <div class="illustration-card">
           <div class="sketch-viewport">
@@ -340,35 +377,50 @@
           </div>
           <div class="sketch-caption">
             <span>Plat Ilustrasi No. 01</span>
-            36 murid • 1 ruang kelas • 1 spidol sekarat[cite: 1]
+            36 murid • 1 ruang kelas • 1 spidol sekarat
           </div>
         </div>
         <div class="page-footer">02</div>
       </div>
 
-      <!-- Halaman Kanan (Teks Bab 01) -->
       <div class="page page-right">
-        <div>
+        <div class="article-scroll-container">
           <div class="chapter-badge">Bab 01</div>
-          <h1>Diferensiasi Rasa Putus Asa[cite: 1]</h1>
+          <h1>Diferensiasi Rasa Putus Asa</h1>
 
           <div class="official-quote">
-            "Penuhilah kebutuhan belajar unik setiap murid. Rancanglah proses pembelajaran yang mengakomodasi gaya auditori, visual, dan kinestetik mereka secara merdeka dan menyenangkan."[cite: 1]
-            <footer>suara resmi yang akan segera diuji oleh kenyataan[cite: 1]</footer>
+            "Penuhilah kebutuhan belajar unik setiap murid. Rancanglah proses pembelajaran yang mengakomodasi gaya auditori, visual, dan kinestetik mereka secara merdeka dan menyenangkan."
+            <footer>suara resmi yang akan segera diuji oleh kenyataan.</footer>
           </div>
 
-          <p class="lead-paragraph">Jam di ruang kelas berdinding hijau lumut pudar[cite: 1]. Tiga puluh enam nyawa duduk berjejal di balik meja kayu tua yang permukaannya dipenuhi ukiran sejarah: dari deklarasi cinta tak sampai zaman angkatan 2014, hingga lambang klub sepak bola Eropa yang digores pakai ujung jangka[cite: 1].</p>
+          <p class="lead-paragraph">Jam di ruang kelas berdinding hijau lumut pudar. Tiga puluh enam nyawa duduk berjejal di balik meja kayu tua yang permukaannya dipenuhi ukiran sejarah: dari deklarasi cinta tak sampai zaman angkatan 2014, hingga lambang klub sepak bola Eropa yang digores pakai ujung jangka.</p>
 
-          <p>Pagi ini misinya mulia: menerapkan[cite: 1]. Di atas kertas RPP, kelas ini dirancang layaknya simfoni orkestra[cite: 1]. Namun di alam nyata, diferensiasi yang terjadi jauh lebih liar[cite: 1]. Barisan depan menatap papan tulis kosong seolah menyerap ilmu lewat fotosintesis[cite: 1]. Di pojok kanan, kelompok kinestetik aktif bergerilya bermain Mobile Legends di balik paha[cite: 1]. Sementara kelompok auditori di sudut kiri tekun menyimak bisik-bisik gosip paling mutakhir[cite: 1].</p>
+          <p>Pagi ini misinya mulia: menerapkan. Di atas kertas RPP (Rencana Pelaksanaan Pembelajaran), kelas ini dirancang layaknya simfoni orkestra. Guru berdiri elegan di depan, membagi instrumen sesuai bakat alami murid: sebagian mendengarkan paparan konsep, sebagian mencerna infografis, sebagian lagi asyik bereksperimen. Harmonis. Sangat estetik untuk difoto lalu diunggah ke laporan kinerja mingguan.</p>
+
+          <p>Namun di alam nyata, diferensiasi yang terjadi jauh lebih organik—dan liar.</p>
+
+          <p>Di barisan depan, ada kelompok visual yang terlalu harfiah. Tiga orang murid menatap papan tulis dengan pandangan kosong, menyerap materi seolah-olah rumus di depan mata adalah lukisan abstrak di museum seni. Mereka tidak mencatat, hanya menatap sampai bola matanya berair, berharap ilmu pengetahuan bisa meresap ke otak lewat proses fotosintesis.</p>
 
           <div class="editorial-box">
             <strong>Catatan Editorial</strong>
-            Di sini, teori bertemu dengan furnitur, jaringan, kebiasaan, dan manusia[cite: 1].
+            Di sini, teori bertemu dengan furnitur, jaringan, kebiasaan, dan manusia.
           </div>
+
+          <p>Di pojok belakang sebelah kanan, kelompok kinestetik sedang aktif memberontak. Definisi "bergerak bebas" bagi mereka bukan merangkai model sains, melainkan keahlian tingkat dewa dalam menyembunyikan ponsel di balik paha. Jempol mereka menari lincah di layar tanpa suara, berkoordinasi meruntuhkan benteng musuh di Mobile Legends. Tiap kali langkah kaki guru mendekat, ponsel itu meluncur mulus ke dalam kolong meja secepat refleks pesulap jalanan.</p>
+
+          <p>Sementara itu, kelompok auditori terkonsentrasi di sudut kiri. Mereka tidak mendengarkan penjelasan materi, melainkan menyimak bisik-bisik gosip paling mutakhir tentang siapa yang putus di kantin saat istirahat pertama tadi. Sesekali kepala mereka manggut-manggut mantap—bukan karena paham materi pelajaran, melainkan setuju bahwa si cowok memang manipulatif.</p>
+
+          <p>Di tengah kekacauan ekosistem ini, berdiri spidol di atas meja guru. Batang plastiknya sudah dekil, ujung seratnya mekar seperti kuas cat bekas bangunan. Spidol malang itu tahu napasnya tersisa hitungan kata saja. Tiap kali ditekan ke permukaan papan tulis, ia mengeluarkan decit memelas: goresan pertamanya hitam tebal, kalimat keduanya memudar abu-abu, dan pada kata penutup ia hanya meninggalkan goresan kering tanpa jejak tinta. Spidol itu lelah. Ia tahu, sekeras apa pun ia berusaha meninggalkan jejak ilmu, papan tulis itu akan segera dihapus tanpa ada yang sempat membacanya.</p>
+
+          <p>Kipas angin gantung di langit-langit ikut berpartisipasi dalam sandiwara ini. Ia berputar malas, mengeluarkan derit berirama yang terdengar seperti tawa mengejek. Alih-alih mendinginkan ruangan, ia hanya mengocok udara pengap dari sudut meja depan ke sudut meja belakang, memastikan rasa kantuk terdistribusi secara adil dan merata ke seluruh penjuru kelas.</p>
+
+          <p>Di meja guru, tumpukan kertas asesmen diagnostik melambai-lambai ditiup angin sepoi-sepoi. Kertas-kertas itu menuntut guru menjadi Avatar: menguasai empat elemen gaya belajar anak dalam waktu sembilan puluh menit, tanpa boleh mengeluh dan wajib selalu tersenyum manis.</p>
+
+          <p>Guru itu menghela napas panjang, menatap tiga puluh enam kepala di depannya. Lalu, dengan suara tenang yang lahir dari kepasrahan mutlak, sebuah instruksi diferensiasi paling otentik abad ini meluncur dari mulutnya.</p>
 
           <div class="chapter-end-box">
             <strong>Penutup Bab 01</strong>
-            Guru akhirnya menghela napas panjang dan meluncurkan instruksi diferensiasi paling otentik abad ini: semua kompak tersenyum, kebutuhan belajar terpenuhi, dan yang terpenting bertahan hidup sampai bel pulang berdentang[cite: 1].
+            Seketika seluruh kelas kompak menjawab serempak, penuh semangat untuk pertama kalinya hari ini. Dan begitulah, kebutuhan belajar tiga puluh enam murid akhirnya benar-benar terpenuhi. Aman, tertib, dan yang paling penting: bertahan hidup sampai bel.
           </div>
         </div>
         <div class="page-footer">03</div>
@@ -379,7 +431,6 @@
     <div class="spread-viewport">
       <div class="book-spine"></div>
       
-      <!-- Halaman Kiri (Sketsa Bab 02) -->
       <div class="page page-left">
         <div class="illustration-card">
           <div class="sketch-viewport">
@@ -387,30 +438,44 @@
           </div>
           <div class="sketch-caption">
             <span>Plat Ilustrasi No. 02</span>
-            Aula • kursi plastik • pinggang yang meminta ampun[cite: 1]
+            Aula • kursi plastik • pinggang yang meminta ampun
           </div>
         </div>
         <div class="page-footer">04</div>
       </div>
 
-      <!-- Halaman Kanan (Teks Bab 02) -->
       <div class="page page-right">
-        <div>
+        <div class="article-scroll-container">
           <div class="chapter-badge">Bab 02</div>
-          <h1>Ekosistem Belajar Ramah Pinggang[cite: 1]</h1>
+          <h1>Ekosistem Belajar Ramah Pinggang</h1>
 
           <div class="official-quote">
             "Sediakan fasilitas ruang belajar yang ergonomis dan fleksibel demi mendukung konsentrasi serta kesehatan fisik peserta didik sepanjang hari."
-            <footer>suara resmi yang akan segera diuji oleh kenyataan[cite: 1]</footer>
+            <footer>suara resmi yang akan segera diuji oleh kenyataan.</footer>
           </div>
 
-          <p class="lead-paragraph">Katanya aula ini tempat lahirnya gagasan besar dan pertemuan penting, tapi siang ini auranya lebih mirip ruang tunggu puskesmas: sepi, lesu, dan penuh orang yang cuma menunggu giliran pulang[cite: 1].</p>
+          <p class="lead-paragraph">Katanya aula ini tempat lahirnya gagasan besar dan pertemuan penting, tapi siang ini auranya lebih mirip ruang tunggu puskesmas: sepi, lesu, dan penuh orang yang cuma menunggu giliran pulang.</p>
 
-          <p>Makhluk paling waras di ruangan ini mungkin deretan kursi plastik kondangan itu[cite: 1]. Si kursi merah di barisan depan tampak pongah membusungkan sandaran plastiknya yang retak, sementara si biru melongo pasrah menjadi alat penyiksa tulang ekor anak sekolah[cite: 1]. Namun tahta tertinggi siang ini jatuh pada selembar terpal biru kusam di tepi dinding[cite: 1]. Terpal itu mendadak naik kasta menjadi kantong tidur bintang lima bagi raga-raga yang telah menyerahkan kesadarannya pada gravitasi bumi[cite: 1].</p>
+          <p>Makhluk paling waras di ruangan ini mungkin deretan kursi plastik kondangan itu. Mereka berdiri kaku, membentuk barisan compang-camping tanpa disiplin ala militer, melainkan rombongan orang linglung yang salah arah jalan pulang. Si kursi merah di barisan depan tampak pongah membusungkan sandaran plastiknya, padahal salah satu kakinya sudah tertekuk pasrah menahan retak. Sementara si biru di sebelahnya cuma melongo, pasrah menjadi alas paling keras yang pernah diciptakan peradaban manusia untuk menyiksa tulang ekor anak sekolah.</p>
+
+          <p>Namun, tahta tertinggi kemerdekaan belajar siang ini bukan milik kursi-kursi plastik itu. Di tepi dinding, terhampar selembar terpal biru kusam yang mendadak naik kasta: dari penutup tumpukan semen menjadi kasur bintang lima. Terpal itu menggeliat pasrah, membungkus raga-raga yang telah menyerahkan seluruh kesadaran intelektualnya pada gravitasi bumi.</p>
+
+          <p>Lipatan plastiknya yang kasar dan berbau debu gudang justru terasa lebih ramah daripada paparan silabus mana pun. Dengan setia, ia menjadi kantong tidur raksasa tempat mimpi-mimpi indah dirajut, menampung dengkur halus yang bersahut-sahutan tanpa beban dosa.</p>
+
+          <p>Tepat di depannya, sandiwara agung sedang dipertontonkan. Guru pembicara berdiri memegang buku teks tebal yang halamannya sudah hafal di luar kepala, pura-pura sibuk menggoreskan spidol dan melempar pertanyaan retoris ke udara kosong. Mulutnya bergerak melantunkan materi, tetapi matanya sengaja dipasang mode buram—fokus menatap lurus ke pintu keluar yang memancarkan siluet cahaya matahari terik, seolah-olah gumpalan manusia yang tertidur pulas di atas terpal biru itu hanyalah ilusi optik akibat dehidrasi.</p>
+
+          <div class="editorial-box">
+            <strong>Catatan Editorial</strong>
+            Di sini, teori bertemu dengan furnitur, jaringan, kebiasaan, dan manusia.
+          </div>
+
+          <p>Dinding aula yang dicat hijau pudar itu pun tampak capek. Warnanya serba tanggung, seperti bingung memutuskan apakah ingin jadi bangsal rumah sakit atau ruang kelas darurat. Di sudut pintu, angin sepoi-sepoi menerobos masuk, bersekongkol dengan terpal biru untuk meninabobokan siapa saja yang masih mencoba bertahan sadar.</p>
 
           <div class="chapter-end-box">
             <strong>Penutup Bab 02</strong>
-            Simbiosis mutualisme paling absurd di dunia pendidikan: murid pura-pura lelap karena kelelahan berpikir, sementara guru pura-pura sibuk mengajar demi memenuhi jam presensi[cite: 1].
+            Tak ada satu pun gagasan besar yang lahir di sini hari ini. Yang ada hanyalah simbiosis mutualisme paling absurd di dunia pendidikan: murid pura-pura lelap karena kelelahan berpikir, sementara guru pura-pura sibuk mengajar demi memenuhi tuntutan jam mengajar.
+            <br><br>
+            Guru di depan akhirnya melirik arlojinya yang berputar lambat, lalu menutup buku teksnya perlahan tanpa menimbulkan suara—takut membangunkan penghuni terpal yang sedang nyenyak. Ia berbisik pelan pada dirinya sendiri.
           </div>
         </div>
         <div class="page-footer">05</div>
@@ -421,7 +486,6 @@
     <div class="spread-viewport">
       <div class="book-spine"></div>
       
-      <!-- Halaman Kiri (Sketsa Bab 03) -->
       <div class="page page-left">
         <div class="illustration-card">
           <div class="sketch-viewport">
@@ -429,30 +493,50 @@
           </div>
           <div class="sketch-caption">
             <span>Plat Ilustrasi No. 03</span>
-            Kelompok • gotong royong • kasta penumpang gelap[cite: 1]
+            Kelompok • gotong royong • penumpang gelap
           </div>
         </div>
         <div class="page-footer">06</div>
       </div>
 
-      <!-- Halaman Kanan (Teks Bab 03) -->
       <div class="page page-right">
-        <div>
+        <div class="article-scroll-container">
           <div class="chapter-badge">Bab 03</div>
-          <h1>Demokrasi Kelompok dan Parasit Sosial[cite: 1]</h1>
+          <h1>Demokrasi Kelompok dan Parasit Sosial</h1>
 
           <div class="official-quote">
-            "Bentuklah kelompok kecil untuk melatih kepemimpinan, nalar kritis, serta semangat gotong royong dalam memecahkan masalah nyata."[cite: 1]
-            <footer>suara resmi yang akan segera diuji oleh kenyataan[cite: 1]</footer>
+            "Bentuklah kelompok kecil untuk melatih kepemimpinan, nalar kritis, serta semangat gotong royong dalam memecahkan masalah nyata."
+            <footer>suara resmi yang akan segera diuji oleh kenyataan.</footer>
           </div>
 
-          <p class="lead-paragraph">Instruksi pembagian kelompok baru saja selesai diucapkan, dan ruang kelas mendadak berubah menjadi bursa transfer pemain sepak bola[cite: 1]. Bukan nalar kritis yang dicari, melainkan bagaimana caranya satu tim dengan anak terpintar di kelas agar nilai tugas aman tanpa perlu memeras keringat[cite: 1].</p>
+          <p class="lead-paragraph">Instruksi pembagian kelompok baru saja selesai diucapkan, dan ruang kelas mendadak berubah menjadi bursa transfer pemain sepak bola. Tidak ada nalar kritis, yang ada hanyalah insting bertahan hidup purba: bagaimana caranya satu kelompok dengan murid terpintar di kelas agar nilai tugas aman tanpa perlu memeras keringat.</p>
 
-          <p>Kasta tertinggi dipegang oleh Si Tulang Punggung yang menulis dengan kening berkerut[cite: 1]. Di sampingnya, Si Operator Gadget berpura-pura riset padahal menonton video kucing di TikTok[cite: 1]. Sudut meja dikawal Si Logistik yang menyuplai keripik singkong dan lem kertas[cite: 1]. Di kursi terluar, bertengger Kasta Penumpang Gelap yang baru berkontribusi sepuluh menit sebelum bel lewat pertanyaan sakral: <em>"Eh, namaku sama nomor absen sudah ditulis belum...?"</em>[cite: 1]</p>
+          <p>Lima menit kemudian, formasi meja bundar darurat terbentuk. Empat meja siswa digeser paksa hingga saling beradu muka, mengeluarkan decit mengerikan yang membuat lantai keramik trauma. Di atas kertas asturo warna merah muda yang baru dibeli di koperasi, lima kepala seharusnya mulai merajut kolaborasi abad ke-21.</p>
+
+          <p>Namun, sosiologi kelompok belajar di ruang kelas selalu punya hierarki kasta yang tidak pernah tercantum di buku panduan mana pun.</p>
+
+          <p>Kasta tertinggi dipegang oleh Si Tulang Punggung. Murid perempuan berkacamata ini duduk dengan kening berkerut, menatap lembar kerja seperti seorang jenderal yang dikepung musuh. Tangannya sibuk merangkum materi, sementara otaknya menghitung sisa waktu sebelum batas pengumpulan. Ia tahu betul, jika ia berhenti menulis barang sepuluh detik saja, proyek peradaban ini akan runtuh seketika.</p>
+
+          <div class="editorial-box">
+            <strong>Catatan Editorial</strong>
+            Di sini, teori bertemu dengan furnitur, kebiasaan, dan manusia.
+          </div>
+
+          <p>Di sebelahnya, duduk Si Operator Gadget. Tugas resminya adalah browsing materi. Namun, gestur jempolnya yang menggeser layar ponsel terlalu ritmis untuk orang yang sedang membaca jurnal ilmiah. Kadang ia tertawa pelan sendiri melihat video kucing di TikTok, lalu buru-buru memasang tampang serius tiap kali ada bayangan guru melintas di sampingnya.</p>
+
+          <p>Di sudut meja yang lain, duduk Si Logistik. Kontribusinya bagi dunia pendidikan hari ini sungguh monumental: menyediakan spidol warna-warni, meminjamkan penggaris, dan memastikan persediaan keripik singkong di atas meja tidak pernah kosong. Tiap kali Si Tulang Punggung menghela napas lelah, Si Logistik menyodorkan bungkusan camilan sambil berbisik prihatin.</p>
+
+          <p>Lalu, ada dua sosok di kursi paling luar: Kasta Penumpang Gelap. Duduknya sengaja dimundurkan sedikit dari lingkaran meja, menjaga jarak aman dari sentuhan kertas asturo. Tatapannya menerawang ke jendela luar kelas, sesekali menguap lebar sambil menatap jarum jam dinding. Partisipasi paling aktif yang mereka sumbangkan hari ini terjadi persis sepuluh menit sebelum bel berbunyi, lewat sebuah kalimat sakral bernada cemas: <em>"Eh, namaku sama nomor absen udah ditulis belum...?"</em></p>
+
+          <p>Di tengah lingkaran itu, gunting lipat dan lem kertas batangan terkapar lunglai. Si lem kertas tampak dehidrasi—tutup plastiknya hilang entah ke mana, membuat batangnya mengering dan lengket berdebu. Ia menyaksikan bagaimana kertas asturo itu akhirnya dipenuhi guntingan teks miring, coretan spidol belepotan, dan tempelan asal jadi yang penting terisi penuh.</p>
+
+          <p>Guru yang berkeliling kelas dengan buku nilai di tangan berhenti sejenak di depan meja mereka. Matanya menatap kertas asturo yang compang-camping, lalu menatap lima anak yang mendadak pura-pura sedang berdebat serius membahas teori ilmiah.</p>
+
+          <p>Sang guru mengangguk-angguk pelan, memberikan senyum paling diplomatis yang ia punya, lalu menorehkan tanda centang besar di buku nilainya: <em>"Bagus, gotong royongnya sangat terasa."</em></p>
 
           <div class="chapter-end-box">
             <strong>Penutup Bab 03</strong>
-            Keadilan sosial telah ditegakkan: satu orang lelah berpikir, empat orang kenyang camilan, dan nilai delapan puluh lima dibagi rata tanpa memandang kasta[cite: 1].
+            Semua orang tersenyum lega. Keadilan sosial telah ditegakkan: satu orang yang lelah berpikir, empat orang yang kenyang camilan, dan nilai delapan puluh lima yang dibagi rata tanpa memandang kasta.
           </div>
         </div>
         <div class="page-footer">07</div>
@@ -463,7 +547,6 @@
     <div class="spread-viewport">
       <div class="book-spine"></div>
       
-      <!-- Halaman Kiri (Sketsa Bab 04) -->
       <div class="page page-left">
         <div class="illustration-card">
           <div class="sketch-viewport">
@@ -471,30 +554,48 @@
           </div>
           <div class="sketch-caption">
             <span>Plat Ilustrasi No. 04</span>
-            Ruang rapat • panas • turbin kipas pemusnah suara[cite: 1]
+            Ruang rapat • panas • turbin kipas
           </div>
         </div>
         <div class="page-footer">08</div>
       </div>
 
-      <!-- Halaman Kanan (Teks Bab 04) -->
       <div class="page page-right">
-        <div>
+        <div class="article-scroll-container">
           <div class="chapter-badge">Bab 04</div>
-          <h1>Ruang Pertemuan & Turbin Keputusasaan[cite: 1]</h1>
+          <h1>Ruang Pertemuan dan Turbin Keputusasaan</h1>
 
           <div class="official-quote">
-            "Pastikan sirkulasi udara dan tata ruang kelas mendukung kenyamanan belajar optimal, agar interaksi antara pendidik dan peserta didik terbangun secara komunikatif."[cite: 1]
-            <footer>suara resmi yang akan segera diuji oleh kenyataan[cite: 1]</footer>
+            "Pastikan sirkulasi udara dan tata ruang kelas mendukung kenyamanan belajar optimal, agar interaksi antara pendidik dan peserta didik terbangun secara hangat dan komunikatif."
+            <footer>suara resmi yang akan segera diuji oleh kenyataan.</footer>
           </div>
 
-          <p class="lead-paragraph">Plakat di dekat kusen dulunya bertuliskan Ruang Pertemuan[cite: 1]. Namun krisis ruangan mengubahnya menjadi kelas darurat yang membuktikan hukum termodinamika[cite: 1].</p>
+          <p class="lead-paragraph">Plakat di dekat kusen pintu dulunya bertuliskan Ruang Pertemuan. Tempat terhormat yang dulu dihajatkan untuk rapat pejabat dinas, penandatanganan berkas penting, atau seminar beranggaran makan siang mewah. Namun krisis ruang belajar mengubah takdirnya secara brutal: ruangan ini diturunkan kasta menjadi kelas darurat. Kursi busa empuknya entah menguap ke mana, berganti dengan invasi meja kayu cokelat berstempel inventaris dan kursi plastik warna-warni yang susunannya semrawut seperti pasar tumpah.</p>
 
-          <p>Penguasa tunggal ruangan ini adalah kipas angin besi raksasa yang lebih mirip baling-baling pesawat tempur Perang Dunia II ketimbang pendingin ruangan[cite: 1]. Alih-alih menyejukkan, putarannya mengaduk udara panas di bawah atap seng menjadi badai gerah[cite: 1]. Tragisnya, suara guru di depan kelas langsung dicacah dan ditelan bulat-bulat oleh dengung mesin[cite: 1]. Guru tampak seperti aktor film bisu yang mulutnya komat-kamit tanpa suara[cite: 1].</p>
+          <p>Siang itu, ruangan ini bukan lagi ruang pertemuan, melainkan ruang pembuktian hukum termodinamika. Panasnya tidak main-main. Udara di dalamnya pekat, berat, dan lembap—terjebak di bawah atap seng yang memanggang dari atas tanpa ampun.</p>
+
+          <p>Di dinding hijau pupus, terpasang sang penguasa tunggal ruangan: kipas angin besi raksasa berwarna hitam legam. Bentuknya lebih mirip baling-baling pesawat tempur Perang Dunia II daripada perabot penyejuk ruangan. Benda itu berputar kesetanan dengan raungan dahsyat. Getarannya merambat ke tembok, membuat lubang ventilasi bata di atasnya gemetar ketakutan.</p>
+
+          <p>Ironisnya, putaran turbin raksasa itu tidak membawa udara sejuk barang sepersekon pun. Ia hanya menyedot hawa gerah dari sudut kiri lalu menyemburkannya kembali dengan kecepatan tinggi ke sudut kanan. Alih-alih mendinginkan, ia mengaduk kepengapan kelas menjadi badai angin panas yang sukses membuat dahi semua orang mengilap oleh keringat.</p>
+
+          <div class="editorial-box">
+            <strong>Catatan Editorial</strong>
+            Di sini, teori bertemu dengan furnitur, jaringan, kebiasaan, dan manusia.
+          </div>
+
+          <p>Yang paling tragis adalah nasib suara guru di depan kelas. Tiap patah kata tentang konsep algoritma dan pengolahan data yang keluar dari mulutnya langsung diembat, dicacah, lalu ditelan bulat-bulat oleh dengung baling-baling besi itu. Suara manusia kalah telak melawan mesin. Guru itu tampak seperti aktor film bisu tempo dulu: mulutnya komat-kamit penuh semangat, urat lehernya menegang, tangannya menunjuk ke udara, tetapi yang sampai ke telinga murid hanyalah dengungan monoton yang bergetar rendah.</p>
+
+          <p>Meja-meja kayu dengan cap cat putih di depannya menjadi benteng pertahanan terakhir. Di atasnya, ransel hitam teronggok layu, botol air mineral ukuran jumbo berdiri tegak seperti amunisi perang, dan sepasang tangan murid terlipat rapi menjadi bantal darurat.</p>
+
+          <p>Di barisan kanan, satu raga sudah menyerah total—kepalanya terkulai di atas meja kayu, tidur lelap diiringi nyanyian turbin yang meninabobokan.</p>
+
+          <p>Sementara di barisan tengah, para siswi duduk mematung dengan tatapan kosong. Kerudung hitam mereka basah tipis di bagian pelipis. Mereka tidak mencatat, tidak bertanya, dan berhenti peduli pada apa pun yang sedang disuarakan oleh guru di depan. Kipas angin raksasa itu telah memberi mereka dalih paling sempurna di dunia.</p>
 
           <div class="chapter-end-box">
             <strong>Penutup Bab 04</strong>
-            Guru akhirnya menyeka pelipis dan memberi isyarat membaca mandiri[cite: 1]. Kipas angin raksasa itu berputar kalap, puas karena sukses membungkam kurikulum tanpa menyisakan argumen[cite: 1].
+            Sang guru akhirnya menurunkan spidolnya, menyeka keringat di pelipis dengan punggung tangan, dan mematikan usahanya untuk bersaing dengan kipas besi. Ia memandang barisan murid yang sedang terpanggang pelan di depannya, lalu melambaikan tangan memberi isyarat universal: membaca mandiri.
+            <br><br>
+            Ruang pertemuan itu pun kembali damai. Tidak ada yang belajar, tidak ada yang mengajar. Hanya ada dengung kipas angin raksasa yang terus berputar kalap, bangga karena siang ini ia sukses membungkam kurikulum tanpa menyisakan satu argumen pun.
           </div>
         </div>
         <div class="page-footer">09</div>
@@ -505,7 +606,6 @@
     <div class="spread-viewport">
       <div class="book-spine"></div>
       
-      <!-- Halaman Kiri (Sketsa Bab 05) -->
       <div class="page page-left">
         <div class="illustration-card">
           <div class="sketch-viewport">
@@ -513,30 +613,50 @@
           </div>
           <div class="sketch-caption">
             <span>Plat Ilustrasi No. 05</span>
-            Prestasi • aplikasi • ilusi presensi digital[cite: 1]
+            Prestasi • aplikasi • jaringan
           </div>
         </div>
         <div class="page-footer">10</div>
       </div>
 
-      <!-- Halaman Kanan (Teks Bab 05) -->
       <div class="page page-right">
-        <div>
+        <div class="article-scroll-container">
           <div class="chapter-badge">Bab 05</div>
-          <h1>Ilusi Prestasi dan Digitalisasi Putus Asa[cite: 1]</h1>
+          <h1>Ilusi Prestasi dan Digitalisasi Putus Asa</h1>
 
           <div class="official-quote">
-            "Akselerasi transformasi digital dan ekosistem pendidikan berdaya saing global untuk mencetak generasi emas yang unggul di kancah nasional maupun internasional."[cite: 1]
-            <footer>suara resmi yang akan segera diuji oleh kenyataan[cite: 1]</footer>
+            "Akselerasi transformasi digital dan ekosistem pendidikan berdaya saing global untuk mencetak generasi emas yang unggul di kancah nasional maupun internasional."
+            <footer>suara resmi yang akan segera diuji oleh kenyataan.</footer>
           </div>
 
-          <p class="lead-paragraph">Di lini masa media sosial, sekolah tetangga memamerkan piala setinggi dada dan medali olimpiade[cite: 1]. Namun di dimensi kita, pertempuran harian masih seputar tas ransel hitam kosong yang mengklaim bangku kelas[cite: 1].</p>
+          <p class="lead-paragraph">Di lini masa media sosial, sekolah tetangga tampak seperti pabrik manusia super. Tiap pekan unggahannya seragam: foto murid tersenyum memegang piala setinggi dada, spanduk ucapan selamat peraih medali olimpiade sains, atau video paduan suara dengan seragam berkilau di aula megah berpendingin udara. Pendidikan di luar sana terasa begitu gegap gempita, melaju kencang menuju peradaban antariksa.</p>
 
-          <p>Dari tiga puluh enam nama presensi, separuhnya berstatus gaib di warung kopi[cite: 1]. Dan solusi pamungkas para birokrat adalah: aplikasi[cite: 1]. Siswa bolos diatasi dengan aplikasi geolokasi; siswa terlambat dipantau portal karakter terpadu[cite: 1]. Guru-guru setiap pagi sibuk berburu sinyal di pojok kelas untuk swafoto presensi demi menyelamatkan tunjangan kinerja[cite: 1].</p>
+          <p>Sementara di dimensi kita, pertempuran harian masih berkutat pada perkara paling mendasar sejak zaman batu.</p>
+
+          <p>Pukul delapan lewat empat puluh. Di atas meja kayu cokelat berstempel cat putih itu, bukan buku rumus atau modul koding yang tergeletak, melainkan seonggok tas ransel hitam tanpa pemilik. Tas itu kempes, teronggok lesu seperti mayat kantong tidur, mengklaim wilayah kekuasaan bagi raga yang entah sedang nongkrong di warung kopi seberang pagar atau masih meringkuk di kasur rumahnya.</p>
+
+          <p>Di bawah meja, sepasang sepatu kain hitam ditinggalkan begitu saja tanpa kaus kaki. Meja kayu inventaris itu tampak kebingungan menatap bawahannya: Lantai keramik putih di bawahnya sudah kenyang merekam drama absensi.</p>
+
+          <p>Dari tiga puluh enam nama yang terdaftar di lembar presensi, hanya belasan kepala yang tampak hadir secara utuh. Sisanya berstatus gaib: ada yang terlambat dengan seribu alasan klise, ada yang izin ke toilet lalu hilang ditelan segitiga bermuda kantin, dan ada pula yang baru menampakkan batang hidungnya persis sepuluh menit sebelum bel pulang berdering.</p>
+
+          <div class="editorial-box">
+            <strong>Catatan Editorial</strong>
+            Di sini, teori bertemu dengan furnitur, jaringan, kebiasaan, dan manusia.
+          </div>
+
+          <p>Lalu, apa solusi pamungkas dari para pemangku kebijakan? Tentu saja bukan memperbaiki pagar jebol, bukan mendatangi rumah orang tua, apalagi membenahi fasilitas kelas yang pengap. Jawabannya adalah: aplikasi.</p>
+
+          <p>Mereka selalu percaya bahwa setiap penyakit sosial di sekolah bisa disembuhkan dengan tautan unduhan di Play Store. Murid sering bolos? Bikin aplikasi presensi digital berbasis wajah dan geolokasi. Murid terlambat? Luncurkan portal pemantauan karakter terintegrasi.</p>
+
+          <p>Tidak ada yang menindaklanjuti data-data itu, tidak ada anggaran pembinaan riil, yang penting para guru setiap pagi sibuk berburu sinyal di pojok kelas, mengambil swafoto presensi, dan mengunggah log aktivitas harian agar tunjangan tidak dipotong.</p>
+
+          <p>Aplikasi-aplikasi itu menumpuk di memori ponsel guru seperti sampah digital yang rakus kuota. Servernya sering tumbang tiap jam masuk kantor, tombol kirimnya berputar tanpa henti, meninggalkan para pendidik dalam jeratan administrasi semu. Ironi yang sempurna: teknologi diciptakan untuk mempermudah hidup, namun di sekolah ini, aplikasi justru bertindak sebagai beban tambahan yang memastikan guru makin tidak punya waktu untuk benar-benar mengajar.</p>
+
+          <p>Di barisan belakang, seorang murid laki-laki merebahkan kepalanya melintang di atas meja, tertidur lelap tanpa rasa bersalah sedikit pun. Di sampingnya, beberapa siswi bergerombol menatap layar gawai dengan tatapan kosong, menunggu jam berganti.</p>
 
           <div class="chapter-end-box">
             <strong>Penutup Bab 05</strong>
-            Layar laptop guru menampilkan lingkaran penantian aplikasi kinerja yang berputar lambat[cite: 1]. Tidak ada medali emas hari ini, yang ada hanyalah kemenangan kecil yang getir[cite: 1].
+            Guru di depan menatap layar laptopnya yang sedang memuat halaman aplikasi pelaporan kinerja: indikator berputar-putar lambat, persis seperti masa depan pendidikan di ruangan ini. Tidak ada medali emas hari ini, tidak ada piala bergengsi yang bisa dipamerkan ke dinas. Yang ada hanyalah sebuah kemenangan kecil yang getir.
           </div>
         </div>
         <div class="page-footer">11</div>
@@ -547,7 +667,6 @@
     <div class="spread-viewport">
       <div class="book-spine"></div>
       
-      <!-- Halaman Kiri (Sketsa Bab 06) -->
       <div class="page page-left">
         <div class="illustration-card">
           <div class="sketch-viewport">
@@ -555,30 +674,52 @@
           </div>
           <div class="sketch-caption">
             <span>Plat Ilustrasi No. 06</span>
-            Ritual pagi • tongsis • dokumentasi kepalsuan[cite: 1]
+            Ritual pagi • kamera • dokumentasi
           </div>
         </div>
         <div class="page-footer">12</div>
       </div>
 
-      <!-- Halaman Kanan (Teks Bab 06) -->
       <div class="page page-right">
-        <div>
+        <div class="article-scroll-container">
           <div class="chapter-badge">Bab 06</div>
-          <h1>Ritual Pagi & Teater Sang Nahkoda[cite: 1]</h1>
+          <h1>Ritual Pagi dan Teater Sang Nahkoda</h1>
 
           <div class="official-quote">
-            "Bangunlah budaya kerja positif dan gelora motivasi harian melalui internalisasi nilai-nilai organisasi secara serentak, adaptif, dan penuh antusiasme."[cite: 1]
-            <footer>suara resmi yang akan segera diuji oleh kenyataan[cite: 1]</footer>
+            "Bangunlah budaya kerja positif dan gelora motivasi harian melalui internalisasi nilai-nilai organisasi secara serentak, adaptif, dan penuh antusiasme."
+            <footer>suara resmi yang akan segera diuji oleh kenyataan.</footer>
           </div>
 
-          <p class="lead-paragraph">Pukul tujuh lewat lima di ruang guru[cite: 1]. Puluhan manusia dewasa berpendidikan sarjana dan magister berdiri berjejer canggung di lorong meja sempit[cite: 1].</p>
+          <p class="lead-paragraph">Pukul tujuh lewat lima di ruang guru. Udara pagi yang seharusnya diisi aroma kopi hitam dan lembar kisi-kisi ujian mendadak tegang. Puluhan manusia dewasa berpendidikan sarjana dan magister berdiri berjejer canggung di antara lorong meja kerja yang sempit. Dokumen portofolio dan tumpukan map merah menatap mereka dari sudut meja, heran melihat pemiliknya berbaris rapi seperti kontestan senam kesegaran jasmani.</p>
 
-          <p>Di hadapan mereka, Kepala Sekolah menggenggam ponsel pintar di atas tongsis stabilizer yang menyala[cite: 1]. Pawai yel-yel lima babak dimulai: kepalan tangan integritas, silangan dada loyalitas, hingga lompatan histeris massal di akhir rekaman[cite: 1]. Senyuman dipasang serempak, mengabaikan tatapan mata para guru yang menyimpan kehampaan mutlak[cite: 1]. Begitu tombol stop ditekan, senyuman langsung luntur seketika tanpa sisa[cite: 1].</p>
+          <p>Di depan barisan, berdiri sang figur sentral: Kepala Sekolah. Wajahnya semringah, memancarkan aura pemimpin revolusioner yang siap mengubah dunia sebelum bel masuk berbunyi. Di genggaman tangannya, sebuah ponsel pintar model terbaru terpasang di atas tongsis penstabil. Layar kamera depan menyala, memantulkan wajahnya yang penuh ambisi sinematik.</p>
+
+          <p>Maka, festival kepalsuan itu pun dimulai. Bukan hanya satu pekikan pendek, melainkan pawai lima babak yang berisi deretan janji kosong paling muluk dalam sejarah peradaban modern. Aba-aba hitungan mundur dilafalkan layaknya peluncuran roket.</p>
+
+          <div class="editorial-box">
+            <strong>Catatan Editorial</strong>
+            Di sini, teori bertemu dengan furnitur, jaringan, kebiasaan, dan manusia.
+          </div>
+
+          <p>Babak pertama dibuka dengan janji integritas: pekik para guru serentak. Kepalan tangan kanan diangkat ke dada kiri. Slogan ini menjanjikan keteladanan tanpa cela, padahal beberapa detik sebelumnya mereka masih saling pinjam akun absensi sidik jari karena macet di lampu merah.</p>
+
+          <p>Belum sempat napas diatur, aba-aba kedua meluncur. Tangan berganti menyilang di depan dada. Janji kosong nomor dua ini terdengar begitu heroik, seolah-olah mereka siap mengorbankan jiwa raga, padahal memikirkan proyektor kelas yang mati satu saja sudah bikin kepala berdenyut.</p>
+
+          <p>Lalu masuk babak ketiga: Kedua tangan diangkat ke atas, telapak tangan terbuka lebar. Sebuah resolusi megah yang menjanjikan trofi dan medali, diucapkan oleh guru-guru yang tahu persis bahwa murid di kelas nanti bahkan belum tentu membawa pulpen.</p>
+
+          <p>Masuk ke babak keempat, jurus paling sakti: Mereka menggoyangkan bahu sedikit sambil melempar senyum manis ke arah kamera. Sebuah deklarasi surga dunia, mengabaikan fakta brutal bahwa ruang kelas mereka sepanas oven dan bangku plastiknya sukses membuat tulang ekor murid remuk.</p>
+
+          <p>Puncaknya, babak kelima ditutup dengan histeria massal: Gerakan melompat kecil dilakukan serentak, tangan mengepal ke atas, teriakan melengking memenuhi langit-langit ruang guru. Jika mata dipejamkan, dengungannya mirip murid taman kanak-kanak yang sedang histeris berebut kotak susu gratis.</p>
+
+          <p>Di balik seringai gigi yang dipamerkan itu, mata para guru menyimpan kehampaan mutlak. Tatapan mereka lelah, tercekik oleh ironi kata-kata manis yang baru saja mereka muntahkan ke udara. Mereka tahu, semua kalimat itu hanyalah deretan bualan terstruktur yang tidak pernah diniatkan untuk terwujud di dunia nyata.</p>
+
+          <p>Sementara itu, sang kepala sekolah bergerak lincah bak sutradara film festival. Langkah kakinya meliuk-liuk demi mengambil sudut bidik terbaik. Matanya berbinar menatap layar ponsel: pencahayaannya pas, barisannya tampak kompak, dan kepalan tangan anak buahnya terlihat cukup militan untuk dijadikan bahan laporan capaian kinerja atau sekadar status WhatsApp berdurasi tiga puluh detik.</p>
 
           <div class="chapter-end-box">
             <strong>Penutup Bab 06</strong>
-            Satu-satunya target mutlak pendidikan modern telah tuntas: tampak sempurna di dalam video media sosial tiga puluh detik, tanpa perlu dibuktikan di alam nyata[cite: 1].
+            Begitu selesai, keajaiban sosiologis langsung terjadi. Senyuman lebar itu luntur seketika tanpa sisa, persis seperti layar monitor yang mendadak dicabut kabel dayanya. Punggung-punggung yang tadinya tegak langsung merosot bungkuk, langkah kaki berbalik lemas menuju meja masing-masing, disambut dengusan napas panjang yang bersahut-sahutan.
+            <br><br>
+            Kamera ponsel di atas tongsis itu perlahan diturunkan dengan penuh rasa puas. Pagi ini sekolah telah berhasil menyelesaikan satu-satunya target paling mutlak dalam sistem pendidikan modern: tampak sempurna di dalam video dokumentasi, tanpa perlu repot-repot membuktikannya di dunia nyata.
           </div>
         </div>
         <div class="page-footer">13</div>
@@ -589,7 +730,6 @@
     <div class="spread-viewport">
       <div class="book-spine"></div>
       
-      <!-- Halaman Kiri (Sketsa Bab 07) -->
       <div class="page page-left">
         <div class="illustration-card">
           <div class="sketch-viewport">
@@ -597,30 +737,52 @@
           </div>
           <div class="sketch-caption">
             <span>Plat Ilustrasi No. 07</span>
-            Jam efektif • seremoni • kalender seremonial[cite: 1]
+            Jam efektif • seremoni • kalender
           </div>
         </div>
         <div class="page-footer">14</div>
       </div>
 
-      <!-- Halaman Kanan (Teks Bab 07) -->
       <div class="page page-right">
-        <div>
+        <div class="article-scroll-container">
           <div class="chapter-badge">Bab 07</div>
-          <h1>Jamkos dan Festival Seremonial Abadi[cite: 1]</h1>
+          <h1>Jamkos dan Festival Seremonial Abadi</h1>
 
           <div class="official-quote">
-            "Optimalkan alokasi jam tatap muka efektif melalui manajemen waktu yang presisi, guna memastikan ketuntasan capaian pembelajaran di setiap fase pendidikan."[cite: 1]
-            <footer>suara resmi yang akan segera diuji oleh kenyataan[cite: 1]</footer>
+            "Optimalkan alokasi jam tatap muka efektif melalui manajemen waktu yang presisi, guna memastikan ketuntasan capaian pembelajaran di setiap fase pendidikan."
+            <footer>suara resmi yang akan segera diuji oleh kenyataan.</footer>
           </div>
 
-          <p class="lead-paragraph">Masyarakat mengira jam kosong lahir dari guru yang malas nongkrong di kantin[cite: 1]. Padahal para pendidik sudah siap di meja dengan laptop menyala dan spidol di tangan[cite: 1]. Musuh terbesarnya adalah: kalender festival seremonial[cite: 1].</p>
+          <p class="lead-paragraph">Di mata masyarakat luar, predikat "jam kosong" alias jamkos selalu disematkan pada dosa purba para guru: pengajar yang malas, nongkrong di kantin sambil merokok, atau asyik memeriksa dagangan daring di ruang guru. Namun di sekolah ini, tuduhan itu meleset seratus delapan puluh derajat.</p>
 
-          <p>Senin upacara molor karena pidato kepala sekolah melebar ke pohon mangga[cite: 1]. Selasa literasi di lapangan berubah menjadi penderitaan mikrofon rusak[cite: 1]. Rabu senam disko dangdut bervolume maksimal membuat seragam lepek[cite: 1]. Kamis sarapan bersama yang dokumentasinya lebih lama dari makannya[cite: 1]. Dan Jumat kerja bakti karena dinas mau lewat[cite: 1]. Papan tulis kelas tetap bersih mengilap tanpa sempat tersentuh[cite: 1].</p>
+          <p>Para guru sebenarnya sudah siap tempur. Spidol sudah di tangan, laptop sudah menyala, dan modul ajar hasil begadang semalam sudah dicetak rapi. Sayangnya, musuh utama jam belajar efektif bukan rasa malas, melainkan sesuatu yang jauh lebih birokratis dan tak terkalahkan: kalender festival seremonial.</p>
+
+          <p>Jadwal pelajaran resmi yang tertempel di dinding kelas kini tak ubahnya artefak sejarah. Ia dipajang hanya sebagai pajangan nostalgia, karena dalam praktiknya, kurikulum sesungguhnya diatur oleh memo kilat di grup WhatsApp sekolah yang datang lima menit sebelum bel masuk.</p>
+
+          <p>Setiap pagi selalu punya judul opera yang berbeda.</p>
+
+          <div class="editorial-box">
+            <strong>Catatan Editorial</strong>
+            Di sini, teori bertemu dengan furnitur, jaringan, kebiasaan, dan manusia.
+          </div>
+
+          <p>Senin dibuka dengan apel pagi. Di atas kertas edaran dinas, upacara ini diagendakan cukup empat puluh lima menit demi melatih kedisiplinan. Namun ketika mikrofon podium sudah menyala dan kepala sekolah mulai berceramah, waktu mendadak melar seperti karet gelang basah. Amanat yang awalnya membahas kerapian dasi perlahan melebar ke arah nostalgia masa muda, filsafat kepemimpinan, hingga evaluasi pohon mangga di pekarangan sekolah yang buahnya dicuri orang.</p>
+
+          <p>Murid-murid di lapangan mulai berayun ke kiri dan ke kanan menahan pegal, matahari meninggi membakar ubun-ubun, sementara spidol guru di meja kelas mulai mendingin. Ketika kata penutup akhirnya terucap, jam pelajaran pertama dan kedua sudah melayang ke alam barzah.</p>
+
+          <p>Selasa bukan berarti aman, karena kalender kreativitas langsung menyodorkan agenda literasi. Tiga puluh menit membaca buku di lapangan berubah menjadi dua jam penuh penderitaan: mikrofon mendadak rusak, pembacaan resume murid di panggung berjalan tersendat-sendat, dan sisa waktunya habis dipakai untuk mengumpulkan lembar bukti bacaan demi diarsipkan ke dalam dokumen evaluasi.</p>
+
+          <p>Rabu berganti baju menjadi senam kesegaran. Irama musik disko dangdut dengan pelantang suara bervolume maksimal menghantam gendang telinga sejak jam tujuh. Instruktur senam sewaan meliuk-liuk di panggung dengan celana ketat mencolok, sementara barisan murid di belakang hanya menggoyangkan satu jempol kaki karena mengantuk. Keringat bercucuran, seragam olahraga lepek, dan ketika sesi pendinginan selesai, jam dinding sudah menunjuk angka sembilan lewat lima belas. Pembelajaran tatap muka? Tentu digeser lagi, karena anak-anak harus mengantre ganti baju di toilet yang pintunya tinggal separuh.</p>
+
+          <p>Kamis diisi agenda sarapan bersama bekal gizi seimbang yang proses dokumentasi fotonya memakan waktu lebih lama daripada acara makannya sendiri. Jumat disambut yasinan massal yang disambung bakti sosial membersihkan rumput liar karena kebetulan ada kabar pengawas dinas mau lewat.</p>
+
+          <p>Papan tulis putih di ruang kelas menjadi saksi paling terlantar. Ia berdiri bersih mengilap tanpa coretan rumus, menatap deretan bangku kosong yang penghuninya sedang dijemur di lapangan demi konten media sosial sekolah. Spidol yang sudah disiapkan guru hanya tergeletak lesu di tatakan, tintanya menguap sia-sia tanpa sempat menyentuh bidang datar.</p>
 
           <div class="chapter-end-box">
             <strong>Penutup Bab 07</strong>
-            Saat murid kembali ke kelas dengan napas terengah-engah pada jam keempat, baru satu paragraf terbaca, bel istirahat sudah berdentang riuh[cite: 1].
+            Ketika rombongan murid akhirnya kembali ke kelas pada jam pelajaran keempat dengan napas tersengal-sengal dan bau matahari yang pekat, sang guru hanya bisa menatap mereka dengan tatapan pasrah tak berdaya. Buku teks tebal itu dibuka pelan-pelan, tapi baru satu paragraf terbaca, bel istirahat sudah berdentang nyaring ke seluruh penjuru sekolah.
+            <br><br>
+            Sang guru menutup bukunya kembali, tersenyum getir menatap murid-muridnya yang langsung berhamburan ke kantin, lalu bergumam dalam hati.
           </div>
         </div>
         <div class="page-footer">15</div>
@@ -631,7 +793,6 @@
     <div class="spread-viewport">
       <div class="book-spine"></div>
       
-      <!-- Halaman Kiri (Sketsa Bab 08) -->
       <div class="page page-left">
         <div class="illustration-card">
           <div class="sketch-viewport">
@@ -639,30 +800,52 @@
           </div>
           <div class="sketch-caption">
             <span>Plat Ilustrasi No. 08</span>
-            Pertanyaan • keheningan • kedaulatan bungkam[cite: 1]
+            Pertanyaan • keheningan • keberanian
           </div>
         </div>
         <div class="page-footer">16</div>
       </div>
 
-      <!-- Halaman Kanan (Teks Bab 08) -->
       <div class="page page-right">
-        <div>
+        <div class="article-scroll-container">
           <div class="chapter-badge">Bab 08</div>
-          <h1>Kami Ada, Kami Bisa, Namun Memilih Diam[cite: 1]</h1>
+          <h1>Kami Ada, Kami Bisa, Tetapi Kami Memilih Diam Saja</h1>
 
           <div class="official-quote">
-            "Doronglah keberanian peserta didik untuk berpendapat secara kritis, mengemukakan ide tanpa rasa takut, dan menjadi subjek aktif dialektika kelas."[cite: 1]
-            <footer>suara resmi yang akan segera diuji oleh kenyataan[cite: 1]</footer>
+            "Doronglah keberanian peserta didik untuk berpendapat secara kritis, mengemukakan ide tanpa rasa takut, dan menjadi subjek aktif dalam dialektika ruang kelas yang demokratis."
+            <footer>suara resmi yang akan segera diuji oleh kenyataan.</footer>
           </div>
 
-          <p class="lead-paragraph">Misteri terbesar pedagogi: mengapa tiga puluh remaja yang cerewetnya luar biasa di tongkrongan mendadak menjelma menjadi patung batu begitu guru melempar satu pertanyaan terbuka?[cite: 1]</p>
+          <p class="lead-paragraph">Ada satu misteri terbesar di ruang kelas yang tak pernah berhasil dipecahkan oleh teori pedagogi mana pun: bagaimana mungkin tiga puluh anak muda yang di luar kelas cerewetnya sanggup menyaingi pedagang obat kaki lima, mendadak berubah menjadi sekumpulan patung batu tak bernyawa begitu guru melempar satu pertanyaan sederhana?</p>
 
-          <p>Semua mata kompak menunduk ke lantai[cite: 1]. Menatap ujung sepatu atau pura-pura mencatat rumus acak[cite: 1]. Diamnya mereka bukan karena bodoh, melainkan strategi bertahan hidup tingkat tinggi[cite: 1]: menjawab benar tidak menghasilkan hadiah, tetapi keliru sedikit akan menjadi kelinci percobaan di papan tulis sampai bel istirahat berbunyi[cite: 1]. Cukup bertahan membisu lima menit, maka sang guru akan lelah sendiri dan menjawab pertanyaannya sendiri[cite: 1].</p>
+          <p>Pertanyaan itu melayang di udara kelas, memantul di antara dinding hijau kusam dan lantai keramik yang dingin. Hening. Begitu heningnya sampai desau kipas angin tua di sudut terdengar seperti desah napas pesakitan.</p>
+
+          <p>Tiga puluh pasang mata serempak menurunkan pandangannya ke bawah. Lantai kelas mendadak menjadi objek paling menarik di muka bumi. Ada yang tiba-tiba sangat tekun menatap ujung sepatunya yang mengelupas, ada yang mendadak sibuk memutar-mutar tutup botol air minum, dan ada pula yang pura-pura mencatat rumus acak di buku tulis dengan gerakan tangan sangat meyakinkan. Strateginya seragam: Sekali bola mata bertemu pandang, tamat sudah riwayat hari itu—nama mereka akan terpanggil ke panggung interogasi.</p>
+
+          <p>Secara fisik, mereka jelas ada. Detak jantungnya ada, napasnya berembus, jempolnya bahkan masih lincah membalas pesan di bawah kolong meja. Di luar sana, di ranah media sosial atau tongkrongan warung kopi, mereka ini makhluk yang serbabisa: bisa debat kusir soal taktik bola sampai subuh, bisa merangkai video pendek dengan suntingan dramatis dalam lima menit, dan bisa menghafal puluhan jurus hero gim daring tanpa salah ketik.</p>
+
+          <div class="editorial-box">
+            <strong>Catatan Editorial</strong>
+            Di sini, teori bertemu dengan furnitur, jaringan, kebiasaan, dan manusia.
+          </div>
+
+          <p>Tetapi di dalam habitat ruang kelas yang penuh ancaman terselubung ini, mereka telah merumuskan satu pakta pertahanan hidup yang mutlak: diam.</p>
+
+          <p>Sikap diam ini bukan karena bodoh, melainkan sebuah bentuk kecerdasan bertahan hidup tingkat tinggi. Mereka sudah kenyang menyaksikan sejarah: menjawab benar tidak menghasilkan traktiran seblak, sementara menjawab salah akan membuka gerbang penghakiman massal. Dianggap sok pintar oleh teman sekelas, disindir halus oleh guru, atau lebih sial lagi, dijadikan kelinci percobaan untuk disuruh maju mengerjakan soal di papan tulis sampai bel istirahat berbunyi.</p>
+
+          <p>Bagi mereka, bersuara di kelas adalah investasi paling merugi di dunia. Risiko tinggi, keuntungan nol koma nol persen.</p>
+
+          <p>Papan tulis putih di depan kelas berdiri pongah, bersih tanpa cela, menanti sebuah interaksi cerdas yang tak kunjung tiba. Spidol guru terhenti beberapa senti di depan papan, menggantung kaku seperti harapan yang digantung birokrasi. Sang guru mulai mengulang pertanyaannya dengan nada yang sedikit dinaikkan, menyisipkan kata-kata mutiara tentang pentingnya nalar kritis dan keberanian generasi muda.</p>
+
+          <p>Namun barisan di depannya tetap solid membisu. Mereka bersekutu dalam keheningan yang rapi. Mereka tahu betul, waktu sedang berpihak pada mereka. Cukup pasang wajah lugu, pasrah, dan sedikit bingung, maka dalam waktu lima menit sang guru akan kelelahan sendiri, menyerah pada kesunyian, lalu menjawab pertanyaannya sendiri sambil menghela napas panjang.</p>
+
+          <p>Dan benar saja. Sang guru akhirnya tersenyum kecut, lalu menuliskan jawabannya di papan tulis.</p>
 
           <div class="chapter-end-box">
             <strong>Penutup Bab 08</strong>
-            Mereka ada[cite: 1]. Mereka bisa[cite: 1]. Namun kedaulatan mutlak tetap berada pada aksi tutup mulut berjamaah: diam adalah emas, dan pulang tanpa disuruh ke depan adalah pencapaian tertinggi[cite: 1].
+            Seketika, kelas kembali hidup. Suara gesekan pulpen dan gemeresik kertas terdengar riuh penuh semangat. Tiga puluh kepala kompak mengangguk-angguk seolah baru saja menemukan pencerahan agung.
+            <br><br>
+            Mereka ada. Mereka bisa. Namun siang ini, kedaulatan mutlak tetap berada di tangan aksi tutup mulut berjamaah: diam adalah emas, dan pulang tanpa disuruh maju ke depan kelas adalah prestasi tertinggi seorang pelajar.
           </div>
         </div>
         <div class="page-footer">17</div>
@@ -673,7 +856,6 @@
     <div class="spread-viewport">
       <div class="book-spine"></div>
       
-      <!-- Halaman Kiri (Sketsa Bab 09) -->
       <div class="page page-left">
         <div class="illustration-card">
           <div class="sketch-viewport">
@@ -681,30 +863,50 @@
           </div>
           <div class="sketch-caption">
             <span>Plat Ilustrasi No. 09</span>
-            300 Mbps • kuis online • kembali ke kertas[cite: 1]
+            300 Mbps • Wi-Fi • kembali ke kertas
           </div>
         </div>
         <div class="page-footer">18</div>
       </div>
 
-      <!-- Halaman Kanan (Teks Bab 09) -->
       <div class="page page-right">
-        <div>
+        <div class="article-scroll-container">
           <div class="chapter-badge">Bab 09</div>
-          <h1>Terbelenggu Janji 300 Mbps[cite: 1]</h1>
+          <h1>Terbelenggu Janji 300 Mbps</h1>
 
           <div class="official-quote">
-            "Integrasikan platform komputasi awan dan pembelajaran interaktif real-time, demi ekosistem belajar digital tanpa batas yang adaptif dan inklusif."[cite: 1]
-            <footer>suara resmi yang akan segera diuji oleh kenyataan[cite: 1]</footer>
+            "Integrasikan teknologi komputasi awan dan platform pembelajaran interaktif secara langsung (real-time), guna mewujudkan ekosistem belajar digital tanpa batas yang adaptif dan inklusif."
+            <footer>suara resmi yang akan segera diuji oleh kenyataan.</footer>
           </div>
 
-          <p class="lead-paragraph">Kardus pemancar Wi-Fi di dinding lorong memasang stiker hologram berkilau: 300 Mbps[cite: 1]. Namun di dalam kelas, janji surga digital hancur oleh hukum rimba bandwidth[cite: 1].</p>
+          <p class="lead-paragraph">Kardus pemancar Wi-Fi itu dipajang gagah di dinding lorong sekolah. Di sudutnya masih tertempel stiker hologram berkilau dengan angka keramat yang dicetak tebal: 300 Mbps. Bagi siapa saja yang lewat, angka itu terdengar seperti pintu gerbang menuju surga digital—sebuah jaminan bahwa peradaban di sekolah ini melaju secepat roket, siap mengunduh seluruh perpustakaan dunia dalam hitungan detik.</p>
 
-          <p>Kuis interaktif daring dimulai, tiga puluh enam ponsel mengetuk koneksi bersamaan[cite: 1]. Kotak router bertanduk empat berkejap merah histeris menampung serangan kuota otomatis gim latar belakang[cite: 1]. Dua puluh menit habis memandangi indikator berputar[cite: 1]. Murid-murid beralih asyik memainkan gim dinosaurus offline Google Chrome[cite: 1]. Proyektor tua mendengus letih memancarkan teks: <em>koneksi terputus</em>[cite: 1].</p>
+          <p>Namun di dalam ruang kelas, janji manis itu langsung terbentur hukum rimba bandwidth.</p>
+
+          <p>Pukul sepuluh siang, guru Informatika berdiri di depan dengan antusiasme yang sudah diatur di batas maksimum. Pelajaran hari ini ambisius: kuis interaktif daring menggunakan aplikasi warna-warni berlatar musik riang. Tiga puluh enam tangan mulai membuka kunci layar ponsel. Tiga puluh enam jari serempak mengetuk ikon sambungan Wi-Fi.</p>
+
+          <div class="editorial-box">
+            <strong>Catatan Editorial</strong>
+            Di sini, teori bertemu dengan furnitur, jaringan, kebiasaan, dan manusia.
+          </div>
+
+          <p>Di sudut atas kusen pintu, kotak putih bertanduk empat mendadak mengalami guncangan batin hebat. Lampu indikator kecilnya yang semula berkedip anggun tiba-tiba berkejap histeris, menyala merah-kuning tak keruan layaknya sirine mobil ambulans yang terjebak macet. Perangkat keras berdaya tahan pas-pasan itu menjerit dalam keheningan silikon: ia dirancang untuk melayani empat perangkat kantor guru, tetapi kini dipaksa menampung serbuan tiga puluh enam ponsel haus sinyal yang sebagian besar aplikasi latarnya sedang memperbarui gim secara otomatis.</p>
+
+          <p>Maka, pertempuran digital sesungguhnya dimulai. Layar proyektor di depan kelas menampilkan lingkaran penantian yang berputar lambat tanpa ujung. Satu menit berlalu. Dua menit menguap. Angka 300 Mbps di brosur promosi kini bermutasi menjadi nol koma sekian kilobit per detik—kecepatan purba yang lebih lambat dari laju siput terluka.</p>
+
+          <p>Satu-satunya murid yang berhasil masuk ke ruang tunggu kuis adalah Si Operator Hotspot dari Bab 3. Bukan karena mukjizat internet sekolah, melainkan karena ia diam-diam beralih menggunakan kuota pribadi sisa semalam. Di layar proyektor, nama panggilannya muncul sendirian, mengambang sepi di tengah papan skor yang kosong melompong.</p>
+
+          <p>Dua puluh menit habis hanya untuk memandangi lingkaran yang berputar dengan ritme mengejek. Guru di depan kelas mulai berjalan mondar-mandir mencari titik koordinat sakti di mana bar sinyal ponsel bisa bertambah satu garis. Ia mendekat ke jendela, lalu menjulurkan tangannya keluar terali besi seperti orang yang sedang memohon hujan air di tengah kemarau panjang.</p>
+
+          <p>Sementara itu, para murid tidak menyia-nyiakan momen absurd ini. Di balik sandiwara layar ponsel yang katanya bermasalah, jempol-jempol lihai mereka sudah beralih mode. Karena sambungan internet mati, gim lari tanpa internet yang menampilkan dinosaurus melompati pohon kaktus di Google Chrome mendadak menjadi kompetisi paling bergengsi di seluruh ruangan. Suara ketukan layar terdengar ritmis, mengalahkan desah napas sang guru yang mulai kehabisan tenaga.</p>
+
+          <p>Proyektor tua di atas meja mengeluarkan dengung letih, meniupkan hawa panas dari lubang ventilasinya. Lampu proyektor itu menatap dinding dengan bosan, memantulkan tulisan koneksi terputus. Sebuah pesan eror yang jujur, ringkas, dan menghantam telak setiap jargon modernisasi yang pernah dicetak di brosur penerimaan murid baru.</p>
 
           <div class="chapter-end-box">
             <strong>Penutup Bab 09</strong>
-            Guru akhirnya mematikan proyektor, mengambil kapur dan spidol bekas di meja[cite: 1]. Tiga ratus megabit per detik hanyalah dongeng birokrasi, namun buku tulis bekas tidak pernah membutuhkan kata sandi dan tak pernah tumbang[cite: 1].
+            Guru itu akhirnya mematikan saklar proyektor, mendengar bunyi yang memutus arus, lalu melipat kabel kabel HDMI-nya dengan gerakan sangat terukur. Ia menarik napas dalam-dalam, mengambil sebatang kapur dan spidol bekas yang tersisa di meja, lalu berkata dengan senyum paling tulus yang tersisa di wajahnya.
+            <br><br>
+            Seruan protes kecewa menggema seketika, namun di balik keluhan itu, ada kelegaan kolektif. Tiga ratus megabit per detik hanyalah dongeng pengantar tidur birokrasi, tetapi spidol dan buku tulis bekas—seburuk apa pun keadaannya—tidak pernah membutuhkan kata sandi dan tidak pernah mengalami server tumbang.
           </div>
         </div>
         <div class="page-footer">19</div>
@@ -732,7 +934,10 @@
       });
       const babNumber = String(currentSpread + 1).padStart(2, '0');
       pageIndicator.textContent = `Bab ${babNumber} dari 09`;
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      
+      // Kembalikan posisi scroll narasi ke atas setiap kali ganti bab
+      const scrollable = spreads[currentSpread].querySelector('.article-scroll-container');
+      if (scrollable) scrollable.scrollTop = 0;
     }
 
     function turnSpread(step) {
@@ -752,8 +957,11 @@
       }
     });
 
-    // Navigasi Klik Sisi Buku
+    // Navigasi Klik Sisi Luar Buku
     document.getElementById('bookStage').addEventListener('click', (e) => {
+      // Abaikan jika klik terjadi di dalam area scroll narasi teks agar tidak mengganggu scrolling
+      if (e.target.closest('.article-scroll-container')) return;
+
       const rect = e.currentTarget.getBoundingClientRect();
       const clickX = e.clientX - rect.left;
       if (clickX > rect.width / 2) {
@@ -771,7 +979,7 @@
 
     window.addEventListener('touchend', (e) => {
       const diffX = startX - e.changedTouches[0].screenX;
-      if (Math.abs(diffX) > 45) {
+      if (Math.abs(diffX) > 50) {
         if (diffX > 0) {
           turnSpread(1);
         } else {
