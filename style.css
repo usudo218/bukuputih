@@ -1,17 +1,18 @@
 :root {
-  --bg-workspace: #161514;
-  --paper-cream: #fbf9f4;
-  --paper-line: #e3ded2;
+  --bg-workspace: #121110;
+  --paper-cream: #fcfaf5;
+  --paper-edge: #eae4d5;
+  --paper-line: #ded8c8;
   --hijau-kusam: #384d3e;
   --hijau-muda: #e4ebe6;
   --merah-bata: #b24130;
   --hitam-teks: #211f1c;
   --abu-teks: #69655c;
   /* Margin proporsional A5 ringkas */
-  --margin-top: 8mm;
-  --margin-bottom: 7mm;
-  --margin-outer: 12mm;
-  --margin-inner: 14mm;
+  --margin-top: 10mm;
+  --margin-bottom: 9mm;
+  --margin-outer: 13mm;
+  --margin-inner: 18mm;
 }
 
 * {
@@ -22,6 +23,9 @@
 
 body {
   background-color: var(--bg-workspace);
+  background-image: 
+    radial-gradient(circle at 50% 30%, rgba(255, 255, 255, 0.04) 0%, transparent 70%),
+    linear-gradient(to bottom, #161514, #0d0d0c);
   font-family: 'Lora', Georgia, serif;
   color: var(--hitam-teks);
   min-height: 100vh;
@@ -29,28 +33,59 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 1rem 0.5rem;
+  padding: 1.5rem 0.5rem;
   overflow-y: auto;
   user-select: none;
   touch-action: pan-y pinch-zoom;
 }
 
-/* Kanvas Format A5 Terkunci Sesuai Tinggi Layar (Viewport) */
+/* Kanvas Format Buku Fisik Berdimensi */
 .book-viewport {
   position: relative;
-  /* Kunci tinggi maksimal 90% layar agar tidak terpotong ke bawah */
-  height: min(210mm, 90vh);
-  /* Lebar otomatis mengikuti proporsi rasio A5 (1 : 1.414) */
-  width: calc(min(210mm, 90vh) / 1.414);
-  max-width: 94vw;
+  height: min(210mm, 88vh);
+  width: calc(min(210mm, 88vh) / 1.414);
+  max-width: 92vw;
   background: var(--paper-cream);
-  box-shadow: 
-    0 0 0 1px rgba(0,0,0,0.08),
-    0 25px 60px rgba(0, 0, 0, 0.8),
-    inset 18px 0 35px -10px rgba(0,0,0,0.14);
-  border-radius: 2px 8px 8px 2px;
-  overflow: hidden;
+  border-radius: 3px 10px 10px 3px;
   cursor: pointer;
+
+  /* Efek spine/lipatan buku di kiri & tumpukan tebal kertas di kanan & bawah */
+  box-shadow: 
+    /* Bayangan meja / bayangan jatuh ke permukaan lantai kerja */
+    0 30px 60px -12px rgba(0, 0, 0, 0.85),
+    0 15px 25px -5px rgba(0, 0, 0, 0.6),
+    /* Tumpukan halaman kertas fisik (efek block pages di sisi kanan) */
+    4px 0 0 0 var(--paper-edge),
+    5px 0 1px 0 rgba(0, 0, 0, 0.15),
+    8px 0 0 0 #f0ebdf,
+    9px 0 1px 0 rgba(0, 0, 0, 0.1),
+    12px 0 0 0 #e8e2d4,
+    13px 0 2px 0 rgba(0, 0, 0, 0.2),
+    /* Tumpukan halaman fisik di sisi bawah */
+    0 4px 0 0 var(--paper-edge),
+    0 7px 0 0 #e8e2d4,
+    0 8px 3px 0 rgba(0, 0, 0, 0.35),
+    /* Lekukan spine punggung jilidan di kiri */
+    inset 24px 0 35px -8px rgba(0, 0, 0, 0.16),
+    inset 6px 0 8px -2px rgba(0, 0, 0, 0.22);
+  overflow: hidden;
+}
+
+/* Efek garis halus punggung jilidan lembaran buku */
+.book-viewport::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 14px;
+  background: linear-gradient(to right, 
+    rgba(0,0,0,0.2) 0%, 
+    rgba(0,0,0,0.06) 40%, 
+    rgba(255,255,255,0.25) 75%, 
+    transparent 100%);
+  z-index: 50;
+  pointer-events: none;
 }
 
 .page-sheet {
@@ -78,12 +113,12 @@ body {
   justify-content: space-between;
   align-items: center;
   font-family: 'Plus Jakarta Sans', sans-serif;
-  font-size: 0.6rem;
+  font-size: 0.62rem;
   text-transform: uppercase;
   letter-spacing: 1.5px;
   color: var(--abu-teks);
   border-bottom: 1px solid var(--paper-line);
-  padding-bottom: 1.5mm;
+  padding-bottom: 1.8mm;
   margin-bottom: 2mm;
   flex-shrink: 0;
 }
@@ -97,13 +132,14 @@ body {
   font-weight: 700;
   color: var(--abu-teks);
   border-top: 1px solid var(--paper-line);
-  padding-top: 1.5mm;
+  padding-top: 1.8mm;
   margin-top: auto;
   flex-shrink: 0;
 }
 
 .sheet-body {
   flex: 1;
+  min-height: 0;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -117,10 +153,10 @@ body {
 
 p {
   font-size: 0.75rem;
-  line-height: 1.44;
+  line-height: 1.45;
   text-align: justify;
   text-justify: inter-word;
-  margin-bottom: 0.35rem;
+  margin-bottom: 0.38rem;
   color: #24221f;
 }
 
@@ -131,9 +167,9 @@ p {
   text-align: center;
   border-top: 1px dashed var(--paper-line);
   border-bottom: 1px dashed var(--paper-line);
-  padding: 0.22rem 0.35rem;
+  padding: 0.25rem 0.4rem;
   margin: 0.25rem 0;
-  background: rgba(228, 235, 230, 0.35);
+  background: rgba(228, 235, 230, 0.4);
 }
 
 .editorial-box strong {
@@ -148,12 +184,12 @@ p {
 .official-quote {
   border-left: 3px solid var(--merah-bata);
   background: #f7ede8;
-  padding: 0.35rem 0.55rem;
+  padding: 0.4rem 0.6rem;
   font-style: italic;
   color: #4a2b25;
-  font-size: 0.72rem;
-  line-height: 1.36;
-  margin: 0.25rem 0 0.35rem;
+  font-size: 0.73rem;
+  line-height: 1.38;
+  margin: 0.25rem 0 0.4rem;
   border-radius: 0 4px 4px 0;
 }
 
@@ -168,17 +204,17 @@ p {
 .chapter-end-box {
   background: var(--hijau-muda);
   border-radius: 4px;
-  padding: 0.45rem 0.65rem;
+  padding: 0.5rem 0.7rem;
   border-left: 3px solid var(--hijau-kusam);
-  font-size: 0.72rem;
-  line-height: 1.38;
-  margin-top: 0.25rem;
+  font-size: 0.73rem;
+  line-height: 1.4;
+  margin-top: 0.3rem;
 }
 
 .chapter-end-box strong {
   display: block;
   font-family: 'Plus Jakarta Sans', sans-serif;
-  font-size: 0.6rem;
+  font-size: 0.62rem;
   text-transform: uppercase;
   letter-spacing: 1px;
   color: var(--hijau-kusam);
@@ -222,7 +258,7 @@ p {
   text-align: center;
   justify-content: space-between;
   align-items: center;
-  border-right: 4px solid var(--merah-bata);
+  border-right: 5px solid var(--merah-bata);
 }
 
 .cover-header .badge {
