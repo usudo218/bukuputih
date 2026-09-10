@@ -17,11 +17,11 @@
       --merah-bata: #b24130;
       --hitam-teks: #211f1c;
       --abu-teks: #69655c;
-      /* Proporsi Margin Fisik A5 */
-      --margin-top: 14mm;
-      --margin-bottom: 12mm;
-      --margin-outer: 16mm;
-      --margin-inner: 20mm;
+      /* Margin disesuaikan agar ruang vertikal A5 lebih leluasa */
+      --margin-top: 10mm;
+      --margin-bottom: 9mm;
+      --margin-outer: 13mm;
+      --margin-inner: 16mm;
     }
 
     * {
@@ -74,7 +74,7 @@
       padding-right: var(--margin-outer);
       display: none;
       flex-direction: column;
-      justify-content: space-between; /* Menjamin footer selalu di batas bawah */
+      justify-content: space-between;
       background: var(--paper-cream);
     }
 
@@ -87,13 +87,13 @@
       justify-content: space-between;
       align-items: center;
       font-family: 'Plus Jakarta Sans', sans-serif;
-      font-size: 0.65rem;
+      font-size: 0.62rem;
       text-transform: uppercase;
       letter-spacing: 1.5px;
       color: var(--abu-teks);
       border-bottom: 1px solid var(--paper-line);
-      padding-bottom: 2mm;
-      margin-bottom: 3.5mm;
+      padding-bottom: 1.8mm;
+      margin-bottom: 2.5mm;
       flex-shrink: 0;
     }
 
@@ -102,11 +102,11 @@
       justify-content: center;
       align-items: center;
       font-family: 'Plus Jakarta Sans', sans-serif;
-      font-size: 0.76rem;
+      font-size: 0.72rem;
       font-weight: 700;
       color: var(--abu-teks);
       border-top: 1px solid var(--paper-line);
-      padding-top: 2.5mm;
+      padding-top: 2mm;
       margin-top: auto;
       flex-shrink: 0;
     }
@@ -116,27 +116,32 @@
       display: flex;
       flex-direction: column;
       justify-content: flex-start;
-      overflow: hidden;
+      overflow-y: auto;
+      scrollbar-width: none;
+    }
+
+    .sheet-body::-webkit-scrollbar {
+      display: none;
     }
 
     p {
-      font-size: 0.84rem;
-      line-height: 1.58;
+      font-size: 0.78rem;
+      line-height: 1.48;
       text-align: justify;
       text-justify: inter-word;
-      margin-bottom: 0.55rem;
+      margin-bottom: 0.42rem;
       color: #24221f;
     }
 
     .editorial-box {
       font-family: 'Plus Jakarta Sans', sans-serif;
-      font-size: 0.7rem;
+      font-size: 0.66rem;
       color: var(--hijau-kusam);
       text-align: center;
       border-top: 1px dashed var(--paper-line);
       border-bottom: 1px dashed var(--paper-line);
-      padding: 0.35rem 0.5rem;
-      margin: 0.45rem 0;
+      padding: 0.28rem 0.4rem;
+      margin: 0.35rem 0;
       background: rgba(228, 235, 230, 0.35);
     }
 
@@ -145,59 +150,59 @@
       color: var(--merah-bata);
       text-transform: uppercase;
       letter-spacing: 1px;
-      font-size: 0.62rem;
-      margin-bottom: 0.12rem;
+      font-size: 0.6rem;
+      margin-bottom: 0.1rem;
     }
 
     .official-quote {
       border-left: 3px solid var(--merah-bata);
       background: #f7ede8;
-      padding: 0.55rem 0.8rem;
+      padding: 0.45rem 0.65rem;
       font-style: italic;
       color: #4a2b25;
-      font-size: 0.81rem;
-      line-height: 1.45;
-      margin: 0.4rem 0 0.65rem;
+      font-size: 0.75rem;
+      line-height: 1.4;
+      margin: 0.35rem 0 0.5rem;
       border-radius: 0 4px 4px 0;
     }
 
     .official-quote footer {
       font-style: normal;
-      font-size: 0.65rem;
+      font-size: 0.62rem;
       color: var(--abu-teks);
-      margin-top: 0.25rem;
+      margin-top: 0.2rem;
       font-family: 'Plus Jakarta Sans', sans-serif;
     }
 
     .chapter-end-box {
       background: var(--hijau-muda);
       border-radius: 4px;
-      padding: 0.65rem 0.85rem;
+      padding: 0.55rem 0.75rem;
       border-left: 3px solid var(--hijau-kusam);
-      font-size: 0.81rem;
-      line-height: 1.48;
-      margin-top: 0.4rem;
+      font-size: 0.76rem;
+      line-height: 1.44;
+      margin-top: 0.35rem;
     }
 
     .chapter-end-box strong {
       display: block;
       font-family: 'Plus Jakarta Sans', sans-serif;
-      font-size: 0.65rem;
+      font-size: 0.63rem;
       text-transform: uppercase;
       letter-spacing: 1px;
       color: var(--hijau-kusam);
-      margin-bottom: 0.2rem;
+      margin-bottom: 0.18rem;
     }
 
     .next-cue {
       text-align: right;
       font-family: 'Plus Jakarta Sans', sans-serif;
-      font-size: 0.68rem;
+      font-size: 0.65rem;
       color: var(--merah-bata);
       font-weight: 600;
       letter-spacing: 0.5px;
       margin-top: auto;
-      margin-bottom: 0.4rem;
+      margin-bottom: 0.3rem;
       opacity: 0.85;
     }
 
@@ -206,13 +211,13 @@
       background: #eee8db;
       border: 1px solid var(--paper-line);
       border-radius: 4px;
-      padding: 0.25rem;
-      margin-bottom: 0.6rem;
+      padding: 0.22rem;
+      margin-bottom: 0.5rem;
     }
 
     .artwork-frame img {
       width: 100%;
-      height: 42mm;
+      height: 36mm;
       object-fit: cover;
       border-radius: 2px;
       display: block;
@@ -222,7 +227,7 @@
     .page-sheet.cover-page {
       background: var(--hijau-kusam);
       color: #fff;
-      padding: 12mm 14mm 10mm;
+      padding: 10mm 12mm 8mm;
       text-align: center;
       justify-content: space-between;
       align-items: center;
@@ -239,32 +244,32 @@
       background: var(--merah-bata);
       padding: 0.22rem 0.7rem;
       border-radius: 20px;
-      margin-bottom: 0.4rem;
+      margin-bottom: 0.35rem;
     }
 
     .cover-header h1 {
       font-family: 'Cinzel', serif;
-      font-size: 1.8rem;
+      font-size: 1.7rem;
       line-height: 1.05;
       letter-spacing: 1.5px;
-      margin-bottom: 0.2rem;
+      margin-bottom: 0.18rem;
     }
 
     .cover-header h2 {
       font-family: 'Lora', serif;
       font-style: italic;
-      font-size: 0.82rem;
+      font-size: 0.8rem;
       font-weight: 400;
       color: var(--hijau-muda);
-      line-height: 1.35;
+      line-height: 1.3;
       max-width: 110mm;
       margin: 0 auto;
     }
 
     .cover-portrait-box {
-      width: 54mm;
-      height: 68mm;
-      margin: 0.35rem auto;
+      width: 52mm;
+      height: 64mm;
+      margin: 0.3rem auto;
       border: 2px solid rgba(255, 255, 255, 0.25);
       border-radius: 6px;
       padding: 3px;
@@ -287,19 +292,19 @@
       gap: 1.4rem;
       border-top: 1px solid rgba(255,255,255,0.2);
       border-bottom: 1px solid rgba(255,255,255,0.2);
-      padding: 0.4rem 0;
+      padding: 0.35rem 0;
       width: 100%;
       font-family: 'Plus Jakarta Sans', sans-serif;
     }
 
     .cover-stats .item .num {
       display: block;
-      font-size: 1.2rem;
+      font-size: 1.15rem;
       font-weight: 700;
     }
 
     .cover-stats .item .lbl {
-      font-size: 0.6rem;
+      font-size: 0.58rem;
       text-transform: uppercase;
       letter-spacing: 1.2px;
       color: var(--hijau-muda);
@@ -310,18 +315,17 @@
     }
 
     .cover-bottom p {
-      font-size: 0.7rem;
+      font-size: 0.68rem;
       color: #d2ded5;
       text-align: center;
       font-family: 'Plus Jakarta Sans', sans-serif;
-      line-height: 1.35;
-      margin-bottom: 0.25rem;
+      line-height: 1.3;
+      margin-bottom: 0.2rem;
     }
   </style>
 </head>
 <body>
 
-  <!-- Kanvas Buku Format A5 -->
   <div class="book-viewport" id="bookStage">
 
     <!-- HALAMAN 01: COVER -->
@@ -354,7 +358,7 @@
       <div class="sheet-body">
         <h3 style="font-family:'Cinzel',serif; font-size:1.15rem; color:var(--hijau-kusam); margin-bottom:0.75rem;">Inilah...</h3>
         <p>Sebuah perjalanan melewati kelas yang penuh slogan, kursi yang tidak ramah pinggang, ruang rapat yang berubah menjadi kelas, digitalisasi yang tersandung koneksi, dan murid yang sebenarnya bisa—tetapi memilih diam.</p>
-        <div class="editorial-box" style="margin: 1.5rem 0; padding: 1rem;">
+        <div class="editorial-box" style="margin: 1.2rem 0; padding: 0.8rem;">
           <strong>Palet & Tipografi Editorial</strong>
           Palet utama: krem kertas, hijau kusam, hitam, merah bata.<br>
           Tipografi: serif editorial + sans-serif modern.<br>
@@ -369,7 +373,7 @@
       <div class="running-header"><span>Buku Putih | Catatan Harian</span><span>Bab 01</span></div>
       <div class="sheet-body">
         <div style="font-family:'Plus Jakarta Sans',sans-serif; font-size:0.72rem; font-weight:700; color:var(--merah-bata); text-transform:uppercase; letter-spacing:1.5px;">Bab 01</div>
-        <h2 style="font-family:'Cinzel',serif; font-size:1.2rem; color:var(--hijau-kusam); margin-bottom:0.35rem;">Diferensiasi Rasa Putus Asa</h2>
+        <h2 style="font-family:'Cinzel',serif; font-size:1.15rem; color:var(--hijau-kusam); margin-bottom:0.35rem;">Diferensiasi Rasa Putus Asa</h2>
         <div class="artwork-frame">
           <img src="bab 1.jpg" alt="Ilustrasi Bab 1" loading="lazy">
         </div>
@@ -377,7 +381,7 @@
           "Penuhilah kebutuhan belajar unik setiap murid. Rancanglah proses pembelajaran yang mengakomodasi gaya auditori, visual, dan kinestetik mereka secara merdeka dan menyenangkan."
           <footer>suara resmi yang akan segera diuji oleh kenyataan.</footer>
         </div>
-        <div style="font-family:'Plus Jakarta Sans',sans-serif; font-size:0.72rem; color:var(--abu-teks); text-align:center; font-weight:600;">
+        <div style="font-family:'Plus Jakarta Sans',sans-serif; font-size:0.7rem; color:var(--abu-teks); text-align:center; font-weight:600;">
           36 murid • 1 ruang kelas • 1 spidol sekarat
         </div>
       </div>
@@ -432,11 +436,11 @@
       <div class="running-header"><span>Buku Putih | Catatan Harian</span><span>Bab 02</span></div>
       <div class="sheet-body">
         <div style="font-family:'Plus Jakarta Sans',sans-serif; font-size:0.72rem; font-weight:700; color:var(--merah-bata); text-transform:uppercase; letter-spacing:1.5px;">Bab 02</div>
-        <h2 style="font-family:'Cinzel',serif; font-size:1.2rem; color:var(--hijau-kusam); margin-bottom:0.35rem;">Ekosistem Belajar Ramah Pinggang</h2>
+        <h2 style="font-family:'Cinzel',serif; font-size:1.15rem; color:var(--hijau-kusam); margin-bottom:0.35rem;">Ekosistem Belajar Ramah Pinggang</h2>
         <div class="artwork-frame">
           <img src="bab 2.jpg" alt="Ilustrasi Bab 2" loading="lazy">
         </div>
-        <div style="font-family:'Plus Jakarta Sans',sans-serif; font-size:0.75rem; color:var(--abu-teks); text-align:center; font-weight:600; margin-top:0.4rem;">
+        <div style="font-family:'Plus Jakarta Sans',sans-serif; font-size:0.72rem; color:var(--abu-teks); text-align:center; font-weight:600; margin-top:0.3rem;">
           Aula • kursi plastik • pinggang yang meminta ampun
         </div>
       </div>
@@ -473,7 +477,7 @@
     <div class="page-sheet">
       <div class="running-header"><span>Buku Putih | Catatan Harian</span><span>Penutup Bab 02</span></div>
       <div class="sheet-body">
-        <div class="chapter-end-box" style="margin-top:1rem;">
+        <div class="chapter-end-box" style="margin-top:0.8rem;">
           <strong>Penutup Bab 02</strong>
           Tak ada satu pun gagasan besar yang lahir di sini hari ini. Yang ada hanyalah simbiosis mutualisme paling absurd di dunia pendidikan: murid pura-pura lelap karena kelelahan berpikir, sementara guru pura-pura sibuk mengajar demi memenuhi tuntutan jam mengajar.
           <br><br>
@@ -484,12 +488,12 @@
       <div class="running-footer">10</div>
     </div>
 
-    <!-- HALAMAN 11: BAB 03 OPENING (HALAMAN BARU) -->
+    <!-- HALAMAN 11: BAB 03 OPENING -->
     <div class="page-sheet">
       <div class="running-header"><span>Buku Putih | Catatan Harian</span><span>Bab 03</span></div>
       <div class="sheet-body">
         <div style="font-family:'Plus Jakarta Sans',sans-serif; font-size:0.72rem; font-weight:700; color:var(--merah-bata); text-transform:uppercase; letter-spacing:1.5px;">Bab 03</div>
-        <h2 style="font-family:'Cinzel',serif; font-size:1.2rem; color:var(--hijau-kusam); margin-bottom:0.35rem;">Demokrasi Kelompok dan Parasit Sosial</h2>
+        <h2 style="font-family:'Cinzel',serif; font-size:1.15rem; color:var(--hijau-kusam); margin-bottom:0.35rem;">Demokrasi Kelompok dan Parasit Sosial</h2>
         <div class="artwork-frame">
           <img src="bab 3.jpg" alt="Ilustrasi Bab 3" loading="lazy">
         </div>
@@ -497,7 +501,7 @@
           "Bentuklah kelompok kecil untuk melatih kepemimpinan, nalar kritis, serta semangat gotong royong dalam memecahkan masalah nyata."
           <footer>suara resmi yang akan segera diuji oleh kenyataan.</footer>
         </div>
-        <div style="font-family:'Plus Jakarta Sans',sans-serif; font-size:0.75rem; color:var(--abu-teks); text-align:center; font-weight:600;">
+        <div style="font-family:'Plus Jakarta Sans',sans-serif; font-size:0.72rem; color:var(--abu-teks); text-align:center; font-weight:600;">
           Kelompok • gotong royong • penumpang gelap
         </div>
       </div>
@@ -552,7 +556,7 @@
       <div class="running-header"><span>Buku Putih | Catatan Harian</span><span>Bab 04</span></div>
       <div class="sheet-body">
         <div style="font-family:'Plus Jakarta Sans',sans-serif; font-size:0.72rem; font-weight:700; color:var(--merah-bata); text-transform:uppercase; letter-spacing:1.5px;">Bab 04</div>
-        <h2 style="font-family:'Cinzel',serif; font-size:1.2rem; color:var(--hijau-kusam); margin-bottom:0.35rem;">Ruang Pertemuan dan Turbin Keputusasaan</h2>
+        <h2 style="font-family:'Cinzel',serif; font-size:1.15rem; color:var(--hijau-kusam); margin-bottom:0.35rem;">Ruang Pertemuan dan Turbin Keputusasaan</h2>
         <div class="artwork-frame">
           <img src="bab 4.jpg" alt="Ilustrasi Bab 4" loading="lazy">
         </div>
@@ -560,7 +564,7 @@
           "Pastikan sirkulasi udara dan tata ruang kelas mendukung kenyamanan belajar optimal, agar interaksi antara pendidik dan peserta didik terbangun secara hangat dan komunikatif."
           <footer>suara resmi yang akan segera diuji oleh kenyataan.</footer>
         </div>
-        <div style="font-family:'Plus Jakarta Sans',sans-serif; font-size:0.75rem; color:var(--abu-teks); text-align:center; font-weight:600;">
+        <div style="font-family:'Plus Jakarta Sans',sans-serif; font-size:0.72rem; color:var(--abu-teks); text-align:center; font-weight:600;">
           Ruang rapat • panas • turbin kipas
         </div>
       </div>
@@ -615,7 +619,7 @@
       <div class="running-header"><span>Buku Putih | Catatan Harian</span><span>Bab 05</span></div>
       <div class="sheet-body">
         <div style="font-family:'Plus Jakarta Sans',sans-serif; font-size:0.72rem; font-weight:700; color:var(--merah-bata); text-transform:uppercase; letter-spacing:1.5px;">Bab 05</div>
-        <h2 style="font-family:'Cinzel',serif; font-size:1.2rem; color:var(--hijau-kusam); margin-bottom:0.35rem;">Ilusi Prestasi dan Digitalisasi Putus Asa</h2>
+        <h2 style="font-family:'Cinzel',serif; font-size:1.15rem; color:var(--hijau-kusam); margin-bottom:0.35rem;">Ilusi Prestasi dan Digitalisasi Putus Asa</h2>
         <div class="artwork-frame">
           <img src="bab 5.jpg" alt="Ilustrasi Bab 5" loading="lazy">
         </div>
@@ -623,7 +627,7 @@
           "Akselerasi transformasi digital dan ekosistem pendidikan berdaya saing global untuk mencetak generasi emas yang unggul di kancah nasional maupun internasional."
           <footer>suara resmi yang akan segera diuji oleh kenyataan.</footer>
         </div>
-        <div style="font-family:'Plus Jakarta Sans',sans-serif; font-size:0.75rem; color:var(--abu-teks); text-align:center; font-weight:600;">
+        <div style="font-family:'Plus Jakarta Sans',sans-serif; font-size:0.72rem; color:var(--abu-teks); text-align:center; font-weight:600;">
           Prestasi • aplikasi • jaringan
         </div>
       </div>
@@ -668,12 +672,11 @@
       <div class="running-footer">22</div>
     </div>
 
-    <!-- HALAMAN 23: PENUTUP BAB 05 -->
+    <!-- HALAMAN 23: PENUTUP BAB 05 (DUPLIKASI DIBERSIHKAN) -->
     <div class="page-sheet">
       <div class="running-header"><span>Buku Putih | Catatan Harian</span><span>Penutup Bab 05</span></div>
       <div class="sheet-body">
-        <p>Guru di depan menatap layar laptopnya yang sedang memuat halaman aplikasi pelaporan kinerja: indikator berputar-putar lambat, persis seperti masa depan pendidikan di ruangan ini. Tidak ada medali emas hari ini, tidak ada piala bergengsi yang bisa dipamerkan ke dinas. Yang ada hanyalah sebuah kemenangan kecil yang getir.</p>
-        <div class="chapter-end-box">
+        <div class="chapter-end-box" style="margin-top: 1rem;">
           <strong>Penutup Bab 05</strong>
           Di barisan belakang, seorang murid laki-laki merebahkan kepalanya melintang di atas meja, tertidur lelap tanpa rasa bersalah sedikit pun. Di sampingnya, beberapa siswi bergerombol menatap layar gawai dengan tatapan kosong, menunggu jam berganti.
           <br><br>
@@ -689,7 +692,7 @@
       <div class="running-header"><span>Buku Putih | Catatan Harian</span><span>Bab 06</span></div>
       <div class="sheet-body">
         <div style="font-family:'Plus Jakarta Sans',sans-serif; font-size:0.72rem; font-weight:700; color:var(--merah-bata); text-transform:uppercase; letter-spacing:1.5px;">Bab 06</div>
-        <h2 style="font-family:'Cinzel',serif; font-size:1.2rem; color:var(--hijau-kusam); margin-bottom:0.35rem;">Ritual Pagi dan Teater Sang Nahkoda</h2>
+        <h2 style="font-family:'Cinzel',serif; font-size:1.15rem; color:var(--hijau-kusam); margin-bottom:0.35rem;">Ritual Pagi dan Teater Sang Nahkoda</h2>
         <div class="artwork-frame">
           <img src="bab 6.jpg" alt="Ilustrasi Bab 6" loading="lazy">
         </div>
@@ -697,7 +700,7 @@
           "Bangunlah budaya kerja positif dan gelora motivasi harian melalui internalisasi nilai-nilai organisasi secara serentak, adaptif, dan penuh antusiasme."
           <footer>suara resmi yang akan segera diuji oleh kenyataan.</footer>
         </div>
-        <div style="font-family:'Plus Jakarta Sans',sans-serif; font-size:0.75rem; color:var(--abu-teks); text-align:center; font-weight:600;">
+        <div style="font-family:'Plus Jakarta Sans',sans-serif; font-size:0.72rem; color:var(--abu-teks); text-align:center; font-weight:600;">
           Ritual pagi • kamera • dokumentasi
         </div>
       </div>
@@ -762,7 +765,7 @@
       <div class="running-header"><span>Buku Putih | Catatan Harian</span><span>Bab 07</span></div>
       <div class="sheet-body">
         <div style="font-family:'Plus Jakarta Sans',sans-serif; font-size:0.72rem; font-weight:700; color:var(--merah-bata); text-transform:uppercase; letter-spacing:1.5px;">Bab 07</div>
-        <h2 style="font-family:'Cinzel',serif; font-size:1.2rem; color:var(--hijau-kusam); margin-bottom:0.35rem;">Jamkos dan Festival Seremonial Abadi</h2>
+        <h2 style="font-family:'Cinzel',serif; font-size:1.15rem; color:var(--hijau-kusam); margin-bottom:0.35rem;">Jamkos dan Festival Seremonial Abadi</h2>
         <div class="artwork-frame">
           <img src="bab 7.jpg" alt="Ilustrasi Bab 7" loading="lazy">
         </div>
@@ -770,7 +773,7 @@
           "Optimalkan alokasi jam tatap muka efektif melalui manajemen waktu yang presisi, guna memastikan ketuntasan capaian pembelajaran di setiap fase pendidikan."
           <footer>suara resmi yang akan segera diuji oleh kenyataan.</footer>
         </div>
-        <div style="font-family:'Plus Jakarta Sans',sans-serif; font-size:0.75rem; color:var(--abu-teks); text-align:center; font-weight:600;">
+        <div style="font-family:'Plus Jakarta Sans',sans-serif; font-size:0.72rem; color:var(--abu-teks); text-align:center; font-weight:600;">
           Jam efektif • seremoni • kalender
         </div>
       </div>
@@ -815,12 +818,11 @@
       <div class="running-footer">32</div>
     </div>
 
-    <!-- HALAMAN 33: PENUTUP BAB 07 -->
+    <!-- HALAMAN 33: PENUTUP BAB 07 (DUPLIKASI DIBERSIHKAN) -->
     <div class="page-sheet">
       <div class="running-header"><span>Buku Putih | Catatan Harian</span><span>Penutup Bab 07</span></div>
       <div class="sheet-body">
-        <p>Ketika rombongan murid akhirnya kembali ke kelas pada jam pelajaran keempat dengan napas tersengal-sengal dan bau matahari yang pekat, sang guru hanya bisa menatap mereka dengan tatapan pasrah tak berdaya. Buku teks tebal itu dibuka pelan-pelan, tapi baru satu paragraf terbaca, bel istirahat sudah berdentang nyaring ke seluruh penjuru sekolah.</p>
-        <div class="chapter-end-box" style="margin-top: 1.5rem;">
+        <div class="chapter-end-box" style="margin-top: 1.2rem;">
           <strong>Penutup Bab 07</strong>
           Ketika rombongan murid akhirnya kembali ke kelas pada jam pelajaran keempat dengan napas tersengal-sengal dan bau matahari yang pekat, sang guru hanya bisa menatap mereka dengan tatapan pasrah tak berdaya. Buku teks tebal itu dibuka pelan-pelan, tapi baru satu paragraf terbaca, bel istirahat sudah berdentang nyaring ke seluruh penjuru sekolah.
           <br><br>
@@ -836,7 +838,7 @@
       <div class="running-header"><span>Buku Putih | Catatan Harian</span><span>Bab 08</span></div>
       <div class="sheet-body">
         <div style="font-family:'Plus Jakarta Sans',sans-serif; font-size:0.72rem; font-weight:700; color:var(--merah-bata); text-transform:uppercase; letter-spacing:1.5px;">Bab 08</div>
-        <h2 style="font-family:'Cinzel',serif; font-size:1.15rem; color:var(--hijau-kusam); margin-bottom:0.35rem;">Kami Ada, Kami Bisa, Tetapi Kami Memilih Diam Saja</h2>
+        <h2 style="font-family:'Cinzel',serif; font-size:1.12rem; color:var(--hijau-kusam); margin-bottom:0.35rem;">Kami Ada, Kami Bisa, Tetapi Kami Memilih Diam Saja</h2>
         <div class="artwork-frame">
           <img src="bab 8.jpg" alt="Ilustrasi Bab 8" loading="lazy">
         </div>
@@ -844,7 +846,7 @@
           "Doronglah keberanian peserta didik untuk berpendapat secara kritis, mengemukakan ide tanpa rasa takut, dan menjadi subjek aktif dalam dialektika ruang kelas yang demokratis."
           <footer>suara resmi yang akan segera diuji oleh kenyataan.</footer>
         </div>
-        <div style="font-family:'Plus Jakarta Sans',sans-serif; font-size:0.75rem; color:var(--abu-teks); text-align:center; font-weight:600;">
+        <div style="font-family:'Plus Jakarta Sans',sans-serif; font-size:0.72rem; color:var(--abu-teks); text-align:center; font-weight:600;">
           Pertanyaan • keheningan • keberanian
         </div>
       </div>
@@ -889,12 +891,11 @@
       <div class="running-footer">37</div>
     </div>
 
-    <!-- HALAMAN 38: PENUTUP BAB 08 -->
+    <!-- HALAMAN 38: PENUTUP BAB 08 (DUPLIKASI DIBERSIHKAN) -->
     <div class="page-sheet">
       <div class="running-header"><span>Buku Putih | Catatan Harian</span><span>Penutup Bab 08</span></div>
       <div class="sheet-body">
-        <p>Seketika, kelas kembali hidup. Suara gesekan pulpen dan gemeresik kertas terdengar riuh penuh semangat. Tiga puluh kepala kompak mengangguk-angguk seolah baru saja menemukan pencerahan agung.</p>
-        <div class="chapter-end-box" style="margin-top: 1.5rem;">
+        <div class="chapter-end-box" style="margin-top: 1.2rem;">
           <strong>Penutup Bab 08</strong>
           Seketika, kelas kembali hidup. Suara gesekan pulpen dan gemeresik kertas terdengar riuh penuh semangat. Tiga puluh kepala kompak mengangguk-angguk seolah baru saja menemukan pencerahan agung.
           <br><br>
@@ -910,7 +911,7 @@
       <div class="running-header"><span>Buku Putih | Catatan Harian</span><span>Bab 09</span></div>
       <div class="sheet-body">
         <div style="font-family:'Plus Jakarta Sans',sans-serif; font-size:0.72rem; font-weight:700; color:var(--merah-bata); text-transform:uppercase; letter-spacing:1.5px;">Bab 09</div>
-        <h2 style="font-family:'Cinzel',serif; font-size:1.2rem; color:var(--hijau-kusam); margin-bottom:0.35rem;">Terbelenggu Janji 300 Mbps</h2>
+        <h2 style="font-family:'Cinzel',serif; font-size:1.15rem; color:var(--hijau-kusam); margin-bottom:0.35rem;">Terbelenggu Janji 300 Mbps</h2>
         <div class="artwork-frame">
           <img src="bab 9.jpg" alt="Ilustrasi Bab 9" loading="lazy">
         </div>
@@ -918,7 +919,7 @@
           "Integrasikan teknologi komputasi awan dan platform pembelajaran interaktif secara langsung (real-time), guna mewujudkan ekosistem belajar digital tanpa batas yang adaptif dan inklusif."
           <footer>suara resmi yang akan segera diuji oleh kenyataan.</footer>
         </div>
-        <div style="font-family:'Plus Jakarta Sans',sans-serif; font-size:0.75rem; color:var(--abu-teks); text-align:center; font-weight:600;">
+        <div style="font-family:'Plus Jakarta Sans',sans-serif; font-size:0.72rem; color:var(--abu-teks); text-align:center; font-weight:600;">
           300 Mbps • Wi-Fi • kembali ke kertas
         </div>
       </div>
