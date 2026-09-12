@@ -27,7 +27,7 @@
             let currentIndex = 0;
             let daftarJudulBab = {};
 
-            // 1. Tampilkan Daftar Isi Buku
+            // 1. Tampilkan Daftar Isi Buku Klasik
             function tampilkanDaftarIsi() {
                 wrapper.innerHTML = '';
                 prevBtn.style.display = 'none';
@@ -51,14 +51,14 @@
                 menuPage.innerHTML = htmlMenu;
                 wrapper.appendChild(menuPage);
 
-                // Ambil judul dari file artikel
+                // Ambil judul dari file artikel secara asinkron
                 for (let i = 1; i <= 9; i++) {
                     if (!daftarJudulBab[i]) {
                         loadJudulArtikel(i);
                     }
                 }
 
-                // Event klik daftar isi
+                // Event klik pada daftar isi
                 document.querySelectorAll('.toc-title').forEach(el => {
                     el.addEventListener('click', (e) => {
                         let nomorBab = e.target.getAttribute('data-bab') || e.target.closest('.toc-title').getAttribute('data-bab');
@@ -67,14 +67,14 @@
                 });
             }
 
-            // Fungsi Ambil Judul
+            // Fungsi Ambil Metadata Judul Bab
             function loadJudulArtikel(nomorBab) {
                 const scriptId = `temp-script-${nomorBab}`;
                 if (document.getElementById(scriptId)) return;
 
                 const script = document.createElement('script');
                 script.id = scriptId;
-                script.src = `artikel/artikel${nomorBab}.js`;
+                script.src = `artikel/artikel${nomorBab}.js?v=` + new Date().getTime();
                 
                 script.onload = () => {
                     if (window.kontenArtikel) {
@@ -83,7 +83,6 @@
                         if (spanEl) {
                             spanEl.innerHTML = `<b>Bab ${nomorBab}</b> — ${window.kontenArtikel.judul}`;
                         }
-                        // Bersihkan memori window agar tidak bentrok antar bab
                         window.kontenArtikel = null; 
                     }
                 };
@@ -94,51 +93,62 @@
                 document.body.appendChild(script);
             }
 
-            // 2. Fungsi Memuat Bab Penuh
+            // 2. Fungsi Memuat Isi Bab Penuh Saat Diklik
             function muatBab(nomorBab) {
                 const oldScript = document.getElementById('active-article-script');
                 if (oldScript) oldScript.remove();
 
-                window.kontenArtikel = null; // Reset data sebelumnya
+                window.kontenArtikel = null;
 
                 const script = document.createElement('script');
                 script.id = 'active-article-script';
-                script.src = `artikel/artikel${nomorBab}.js?v=` + new Date().getTime(); // Mencegah cache browser
+                script.src = `artikel/artikel${nomorBab}.js?v=` + new Date().getTime();
                 
                 script.onload = () => {
-                    // Beri jeda sepersekian detik agar objek global window benar-benar terikat
                     setTimeout(() => {
                         if (window.kontenArtikel) {
                             generateBuku(nomorBab, window.kontenArtikel);
                         } else {
-                            alert(`File artikel/artikel${nomorBab}.js berhasil dimuat, tetapi variabel window.kontenArtikel tidak terbaca.`);
+                            alert(`File artikel/artikel${nomorBab}.js tidak valid (window.kontenArtikel tidak ditemukan).`);
                         }
                     }, 50);
                 };
 
                 script.onerror = () => {
-                    alert(`File artikel/artikel${nomorBab}.js tidak ditemukan di dalam folder artikel/.`);
+                    // Fallback otomatis jika file .js belum dibuat
+                    let dummyData = {
+                        bab: `Bab ${nomorBab}`,
+                        judul: `Judul Artikel Bab ${nomorBab} (Contoh Sementara)`,
+                        paragraf: [
+                            `Ini adalah paragraf contoh untuk menguji tata letak halaman Bab ${nomorBab} karena file fisik artikel${nomorBab}.js belum ditemukan di dalam folder artikel/.`,
+                            "Pastikan Anda membuat file artikel dengan nama yang sesuai agar teks aslinya dapat dimuat dengan sempurna di sini."
+                        ]
+                    };
+                    generateBuku(nomorBab, dummyData);
                 };
-                
                 document.body.appendChild(script);
             }
-            // 3. Generator Halaman Buku
+
+            // 3. Generator Halaman Buku (Auto-Pagination dengan Margin Presisi & Perbaikan Gambar)
             function generateBuku(nomorBab, data) {
                 wrapper.innerHTML = '';
                 
-                // Halaman Cover Bab
+                // Halaman 1: Cover Bab & Gambar Ilustrasi
                 const pageCover = document.createElement('div');
                 pageCover.className = 'page page-cover';
+                
+                // Penanganan jalur gambar: Mencoba memuat images/gambarX.jpg, jika gagal fallback ke gambar1.jpg
                 pageCover.innerHTML = `
                     <h3>${data.bab || 'Bab ' + nomorBab}</h3>
                     <h1 style="font-size: 1.1rem; margin: 10px 0; color: #2c3e50;">${data.judul}</h1>
-                    <img src="images/gambar${nomorBab}.jpg" alt="Ilustrasi Bab ${nomorBab}" onerror="this.src='images/gambar1.jpg'">
+                    <img src="images/gambar${nomorBab}.jpg" alt="Ilustrasi Bab ${nomorBab}" 
+                         onerror="this.onerror=null; this.src='images/gambar1.jpg';">
                     <div style="margin-top: 15px;"><button class="back-menu-btn">← Daftar Isi</button></div>
                     <div class="page-number">1</div>
                 `;
                 wrapper.appendChild(pageCover);
 
-                // Halaman Isi Artikel
+                // Halaman Isi Artikel Pertama
                 let currentPage = document.createElement('div');
                 currentPage.className = 'page';
                 let pageNum = 2;
@@ -147,12 +157,16 @@
                 currentPage.innerHTML = contentHTML + `<div class="page-number">${pageNum}</div>`;
                 wrapper.appendChild(currentPage);
 
+                // Algoritma pemecah paragraf otomatis dengan batas tinggi aman
                 data.paragraf.forEach((teks) => {
                     let p = document.createElement('p');
                     p.textContent = teks;
                     currentPage.insertBefore(p, currentPage.lastElementChild);
 
-                    if (currentPage.scrollHeight > currentPage.clientHeight) {
+                    // Batas tinggi aman dikurangi 50px agar tidak menabrak nomor halaman/bawah
+                    const batasTinggiAman = currentPage.clientHeight - 50;
+
+                    if (currentPage.scrollHeight > batasTinggiAman) {
                         currentPage.removeChild(p);
                         pageNum++;
                         
@@ -173,6 +187,7 @@
                 backMenuDiv.innerHTML = `<button class="back-menu-btn" style="width:100%;">Kembali ke Daftar Isi</button>`;
                 lastPage.insertBefore(backMenuDiv, lastPage.lastElementChild);
 
+                // Event listener untuk tombol kembali ke daftar isi
                 document.querySelectorAll('.back-menu-btn').forEach(btn => {
                     btn.addEventListener('click', () => {
                         currentIndex = 0;
@@ -201,6 +216,7 @@
                 if (currentIndex > 0) { currentIndex--; updateNavigasi(); }
             });
 
+            // Inisialisasi awal saat pertama kali dibuka
             tampilkanDaftarIsi();
         });
     </script>
