@@ -129,15 +129,13 @@
                 document.body.appendChild(script);
             }
 
-            // 3. Generator Halaman Buku (Auto-Pagination dengan Margin Presisi & Perbaikan Gambar)
+            // 3. Generator Halaman Buku (Auto-Pagination Optimal untuk Buku A5)
             function generateBuku(nomorBab, data) {
                 wrapper.innerHTML = '';
                 
                 // Halaman 1: Cover Bab & Gambar Ilustrasi
                 const pageCover = document.createElement('div');
                 pageCover.className = 'page page-cover';
-                
-                // Penanganan jalur gambar: Mencoba memuat images/gambarX.jpg, jika gagal fallback ke gambar1.jpg
                 pageCover.innerHTML = `
                     <h3>${data.bab || 'Bab ' + nomorBab}</h3>
                     <h1 style="font-size: 1.1rem; margin: 10px 0; color: #2c3e50;">${data.judul}</h1>
@@ -148,46 +146,59 @@
                 `;
                 wrapper.appendChild(pageCover);
 
-                // Halaman Isi Artikel Pertama
+                // Buat halaman artikel pertama
+                let pageNum = 2;
                 let currentPage = document.createElement('div');
                 currentPage.className = 'page';
-                let pageNum = 2;
-                
-                let contentHTML = `<h2>${data.bab || 'Bab ' + nomorBab}: ${data.judul}</h2>`;
-                currentPage.innerHTML = contentHTML + `<div class="page-number">${pageNum}</div>`;
+                currentPage.innerHTML = `<h2>${data.bab || 'Bab ' + nomorBab}: ${data.judul}</h2><div class="page-number">${pageNum}</div>`;
                 wrapper.appendChild(currentPage);
 
-                // Algoritma pemecah paragraf otomatis dengan batas tinggi aman
-                data.paragraf.forEach((teks) => {
+                // Batas tinggi aman area teks (tinggi kontainer dikurangi ruang bawah)
+                const batasTinggiAman = currentPage.clientHeight - 60;
+
+                data.paragraf.forEach((teks, index) => {
                     let p = document.createElement('p');
                     p.textContent = teks;
+                    
+                    // Masukkan paragraf sebelum elemen nomor halaman terakhir di halaman aktif
                     currentPage.insertBefore(p, currentPage.lastElementChild);
 
-                    // Batas tinggi aman dikurangi 50px agar tidak menabrak nomor halaman/bawah
-                    const batasTinggiAman = currentPage.clientHeight - 50;
-
+                    // Cek apakah tinggi total melebihi batas aman halaman
                     if (currentPage.scrollHeight > batasTinggiAman) {
+                        // Jika meluber, tarik keluar paragraf tersebut dari halaman ini
                         currentPage.removeChild(p);
+
+                        // Buat halaman baru
                         pageNum++;
-                        
                         currentPage = document.createElement('div');
                         currentPage.className = 'page';
                         currentPage.style.display = 'none';
-                        
                         currentPage.innerHTML = `<div class="page-number">${pageNum}</div>`;
-                        currentPage.insertBefore(p, currentPage.firstChild);
+                        
+                        // Tambahkan judul kecil di atas halaman baru jika berupa halaman lanjutan
+                        if (index > 0) {
+                            let subTitle = document.createElement('h2');
+                            subTitle.style.fontSize = "0.95rem";
+                            subTitle.style.color = "#555";
+                            subTitle.style.marginBottom = "8px";
+                            subTitle.textContent = `${data.bab || 'Bab ' + nomorBab} (lanjutan)`;
+                            currentPage.insertBefore(subTitle, currentPage.lastElementChild);
+                        }
+
+                        // Masukkan paragraf ke halaman baru tersebut
+                        currentPage.insertBefore(p, currentPage.lastElementChild);
                         wrapper.appendChild(currentPage);
                     }
                 });
 
-                // Tombol kembali di halaman akhir bab
+                // Tombol kembali ke daftar isi di halaman terakhir bab
                 let lastPage = wrapper.lastElementChild;
                 let backMenuDiv = document.createElement('div');
                 backMenuDiv.style.marginTop = "15px";
                 backMenuDiv.innerHTML = `<button class="back-menu-btn" style="width:100%;">Kembali ke Daftar Isi</button>`;
                 lastPage.insertBefore(backMenuDiv, lastPage.lastElementChild);
 
-                // Event listener untuk tombol kembali ke daftar isi
+                // Event listener untuk tombol kembali
                 document.querySelectorAll('.back-menu-btn').forEach(btn => {
                     btn.addEventListener('click', () => {
                         currentIndex = 0;
