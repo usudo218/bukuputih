@@ -1,38 +1,33 @@
-/* style.css - Layout Buku Digital & Daftar Isi Buku Klasik */
-:root {
-    --book-width: 100vw;
-    --book-height: 100vh;
-}
-
+/* style.css - Full Screen Mobile Layout */
 * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
 }
 
-body {
-    background-color: #2b2b2b;
+body, html {
+    width: 100%;
+    height: 100%;
+    background-color: #1a1a1a;
     color: #333;
     font-family: 'Times New Roman', Times, serif, sans-serif;
+    overflow: hidden;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
-    overflow: hidden;
 }
 
+/* Kontainer Buku Full Layar HP */
 #book-container {
-    width: 100%;
-    max-width: 480px;
-    height: 100%;
-    max-height: 850px;
+    width: 100vw;
+    height: 100vh;
     background: #fdfbf7;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
     position: relative;
     overflow: hidden;
     display: flex;
 }
 
+/* Desain per Halaman Buku */
 .page {
     width: 100%;
     height: 100%;
@@ -40,56 +35,56 @@ body {
     top: 0;
     left: 0;
     background: #fdfbf7;
-    padding: 25px 20px 35px 25px;
+    padding: 20px 18px 30px 18px; /* Margin pas untuk baca di HP */
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     backface-visibility: hidden;
-    border-left: 1px solid #e0dad0;
-    box-shadow: inset 15px 0 15px -10px rgba(0,0,0,0.05);
+    box-shadow: inset 10px 0 15px -10px rgba(0,0,0,0.05);
     overflow: hidden;
 }
 
+/* Halaman Cover / Ilustrasi / Daftar Isi */
 .page-cover {
     justify-content: flex-start;
     align-items: center;
     text-align: center;
     background: #f4efe6;
-    padding-top: 40px;
+    padding-top: 30px;
 }
 
 .page-cover h2 {
-    font-size: 1.4rem;
-    margin-bottom: 20px;
+    font-size: 1.3rem;
+    margin-bottom: 15px;
     color: #2c3e50;
     border-bottom: 2px solid #d5ccd0;
-    padding-bottom: 8px;
+    padding-bottom: 6px;
     width: 100%;
 }
 
 .page-cover img {
     max-width: 100%;
-    max-height: 45vh;
+    max-height: 48vh;
     object-fit: contain;
     border: 1px solid #ccc;
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 
-/* Styling Daftar Isi Selayaknya Buku Cetak */
+/* Styling Daftar Isi Buku */
 .toc-list {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 10px;
     width: 100%;
-    max-height: 65vh;
+    max-height: 68vh;
     overflow-y: auto;
     text-align: left;
-    padding: 0 10px;
+    padding: 0 5px;
 }
 
 .toc-item {
     border-bottom: 1px dashed #d0c8be;
-    padding-bottom: 8px;
+    padding-bottom: 6px;
 }
 
 .toc-title {
@@ -98,56 +93,47 @@ body {
     cursor: pointer;
     line-height: 1.4;
     display: block;
-    transition: color 0.2s, padding-left 0.2s;
-}
-
-.toc-title:hover {
-    color: #8b0000; /* Warna merah marun klasik saat disentuh */
-    padding-left: 5px;
 }
 
 /* Tipografi Isi Artikel */
 .page h2 {
-    font-size: 1.15rem;
-    margin-bottom: 12px;
+    font-size: 1.1rem;
+    margin-bottom: 10px;
     color: #1a1a1a;
     border-bottom: 1px solid #dcd6cd;
     padding-bottom: 4px;
 }
 
 .page p {
-    font-size: 0.92rem;
-    line-height: 1.5;
+    font-size: 0.9rem;
+    line-height: 1.45;
     text-align: justify;
-    margin-bottom: 10px;
+    margin-bottom: 8px;
     text-indent: 1.5em;
 }
 
+/* Nomor Halaman di Bawah */
 .page-number {
     position: absolute;
-    bottom: 15px;
-    right: 25px;
+    bottom: 10px;
+    right: 20px;
     font-size: 0.75rem;
     color: #777;
 }
 
-.nav-btn {
+/* Tombol Navigasi Samping (Transparan untuk klik sisi kiri/kanan) */
+.nav-click-zone {
     position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    background: rgba(0,0,0,0.2);
-    color: white;
-    border: none;
-    padding: 15px 10px;
+    top: 0;
+    height: 100%;
+    width: 25%;
+    z-index: 999;
     cursor: pointer;
-    z-index: 1000;
-    font-size: 1rem;
-    border-radius: 4px;
 }
-#prev-btn { left: 5px; }
-#next-btn { right: 5px; }
+#click-left { left: 0; }
+#click-right { right: 0; }
 
-/* Tombol Navigasi Kembali */
+/* Tombol kembali ke menu di dalam halaman */
 .back-menu-btn {
     background: #5a5550;
     color: white;
@@ -157,7 +143,4 @@ body {
     font-size: 0.85rem;
     cursor: pointer;
     font-family: serif;
-}
-.back-menu-btn:hover {
-    background: #3a3530;
 }
