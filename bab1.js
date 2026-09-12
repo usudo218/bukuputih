@@ -1,0 +1,22 @@
+// artikel.js - Sumber Data Artikel Bab 1
+const kontenArtikel = {
+    judul: "BAB 1: DIFERENSIASI RASA PUTUS ASA",
+    paragraf: [
+        "“Penuhilah kebutuhan belajar unik setiap murid. Rancanglah proses pembelajaran yang mengakomodasi gaya auditori, visual, dan kinestetik mereka secara merdeka dan menyenangkan.”",
+        "— Dikutip dari slide pelatihan daring yang pematerinya mengajar di ruang ber-AC.",
+        "Jam delapan pagi di ruang kelas berdinding hijau lumut pudar. Tiga puluh enam nyawa duduk berjejal di balik meja kayu tua yang permukaannya dipenuhi ukiran sejarah: dari deklarasi cinta tak sampai zaman angkatan 2014, hingga lambang klub sepak bola Eropa yang digores pakai ujung jangka.",
+        "Pagi ini misinya mulia: menerapkan pembelajaran berdiferensiasi. Di atas kertas RPP (Rencana Pelaksanaan Pembelajaran), kelas ini dirancang layaknya simfoni orkestra. Guru berdiri elegan di depan, membagi instrumen sesuai bakat alami murid: sebagian mendengarkan paparan konsep, sebagian mencerna infografis, sebagian lagi asyik bereksperimen. Harmonis. Sangat estetik untuk difoto lalu diunggah ke laporan kinerja mingguan.",
+        "Namun di alam nyata, diferensiasi yang terjadi jauh lebih organik—dan liar.",
+        "Di barisan depan, ada kelompok visual yang terlalu harfiah. Tiga orang murid menatap papan tulis dengan pandangan kosong, menyerap materi seolah-olah rumus di depan mata adalah lukisan abstrak di museum seni. Mereka tidak mencatat, hanya menatap sampai bola matanya berair, berharap ilmu pengetahuan bisa meresap ke otak lewat proses fotosintesis.",
+        "Di pojok belakang sebelah kanan, kelompok kinestetik sedang aktif memberontak. Definisi \"bergerak bebas\" bagi mereka bukan merangkai model sains, melainkan keahlian tingkat dewa dalam menyembunyikan ponsel di balik paha. Jempol mereka menari lincah di layar tanpa suara, berkoordinasi meruntuhkan benteng musuh di Mobile Legends. Tiap kali langkah kaki guru mendekat, ponsel itu meluncur mulus ke dalam kolong meja secepat refleks pesulap jalanan.",
+        "Sementara itu, kelompok auditori terkonsentrasi di sudut kiri. Mereka tidak mendengarkan penjelasan materi, melainkan menyimak bisik-bisik gosip paling mutakhir tentang siapa yang putus di kantin saat istirahat pertama tadi. Sesekali kepala mereka manggut-manggut mantap—bukan karena paham materi pelajaran, melainkan setuju bahwa si cowok memang manipulatif.",
+        "Di tengah kekacauan ekosistem ini, berdiri spidol boardmarker di atas meja guru. Batang plastiknya sudah dekil, ujung seratnya mekar seperti kuas cat bekas bangunan. Spidol malang itu tahu napasnya tersisa hitungan kata saja. Tiap kali ditekan ke permukaan papan tulis, ia mengeluarkan decit memelas: goresan pertamanya hitam tebal, kalimat keduanya memudar abu-abu, dan pada kata penutup ia hanya meninggalkan goresan kering tanpa jejak tinta. Spidol itu lelah. Ia tahu, sekeras apa pun ia berusaha meninggalkan jejak ilmu, papan tulis itu akan segera dihapus tanpa ada yang sempat membacanya.",
+        "Kipas angin gantung di langit-langit ikut berpartisipasi dalam sandiwara ini. Ia berputar malas, mengeluarkan derit berirama krieeek-kreeek yang terdengar seperti tawa mengejek. Alih-alih mendinginkan ruangan, ia hanya mengocok udara pengap dari sudut meja depan ke sudut meja belakang, memastikan rasa kantuk terdistribusi secara adil dan merata ke seluruh penjuru kelas.",
+        "Di meja guru, tumpukan kertas asesmen diagnostik melambai-lambai ditiup angin sepoi-sepoi. Kertas-kertas itu menuntut guru menjadi Avatar: menguasai empat elemen gaya belajar anak dalam waktu sembilan puluh menit, tanpa boleh mengeluh dan wajib selalu tersenyum manis.",
+        "Guru itu menghela napas panjang, menatap tiga puluh enam kepala di depannya. Lalu, dengan suara tenang yang lahir dari kepasrahan mutlak, sebuah instruksi diferensiasi paling otentik abad ini meluncur dari mulutnya:",
+        "“Kerjakan halaman empat puluh dua sampai empat puluh lima. Yang mau nulis silakan, yang mau tidur jangan ngorok, dan yang lagi mabar tolong volumenya di-mute. Paham?”",
+        "Seketika seluruh kelas kompak menjawab serempak, penuh semangat untuk pertama kalinya hari ini:",
+        "“Paham, Pak!”",
+        "Dan begitulah, kebutuhan belajar tiga puluh enam murid akhirnya benar-benar terpenuhi. Aman, tertib, dan yang paling penting: bertahan hidup sampai bel istirahat tiba."
+    ]
+};
