@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Buku Digital - 9 Bab</title>
+    <title>Buku Digital</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -25,9 +25,10 @@
             
             let pages = [];
             let currentIndex = 0;
+            let daftarJudulBab = {}; // Menyimpan judul bab yang berhasil dimuat
 
-            // 1. Tampilkan Halaman Daftar Isi Utama (Menu Pilihan Bab 1 - 9)
-            function tampilkanDaftarIsi() {
+            // 1. Fungsi Memuat Semua Judul Bab untuk Daftar Isi
+            async function tampilkanDaftarIsi() {
                 wrapper.innerHTML = '';
                 prevBtn.style.display = 'none';
                 nextBtn.style.display = 'none';
@@ -35,79 +36,115 @@
                 let menuPage = document.createElement('div');
                 menuPage.className = 'page page-cover';
                 
-                let htmlMenu = `<h2>Daftar Isi Buku</h2><div class="menu-list">`;
+                let htmlMenu = `<h2>Daftar Isi</h2><div class="toc-list">`;
+                
+                // Looping untuk meload variabel dari artikel1.js sampai artikel9.js secara asinkron
                 for (let i = 1; i <= 9; i++) {
-                    htmlMenu += `<button class="chapter-btn" data-bab="${i}">Bab ${i}</button>`;
+                    // Jika judul belum tersimpan, buat placeholder atau load script-nya
+                    let judulTampil = daftarJudulBab[i] || `Memuat Bab ${i}...`;
+                    htmlMenu += `
+                        <div class="toc-item">
+                            <span class="toc-title" data-bab="${i}"><b>Bab ${i}</b> — ${judulTampil}</span>
+                        </div>
+                    `;
                 }
                 htmlMenu += `</div><div class="page-number">1</div>`;
                 
                 menuPage.innerHTML = htmlMenu;
                 wrapper.appendChild(menuPage);
 
-                // Event listener untuk tombol pilihan bab
-                document.querySelectorAll('.chapter-btn').forEach(btn => {
-                    btn.addEventListener('click', (e) => {
-                        let nomorBab = e.target.getAttribute('data-bab');
+                // Ambil data judul dari file artikel jika belum ada
+                for (let i = 1; i <= 9; i++) {
+                    if (!daftarJudulBab[i]) {
+                        loadJudulArtikel(i);
+                    }
+                }
+
+                // Event listener klik pada daftar isi
+                document.querySelectorAll('.toc-title').forEach(el => {
+                    el.addEventListener('click', (e) => {
+                        let nomorBab = e.target.getAttribute('data-bab') || e.target.closest('.toc-title').getAttribute('data-bab');
                         muatBab(nomorBab);
                     });
                 });
             }
 
-            // 2. Fungsi Memuat File Artikel dari Folder /artikel/ secara Dinamis
+            // Fungsi helper untuk mengambil metadata judul dari file .js
+            function loadJudulArtikel(nomorBab) {
+                const oldScript = document.getElementById(`temp-script-${nomorBab}`);
+                if (oldScript) oldScript.remove();
+
+                const script = document.createElement('script');
+                script.id = `temp-script-${nomorBab}`;
+                script.src = `artikel/artikel${nomorBab}.js`;
+                
+                script.onload = () => {
+                    if (window.kontenArtikel) {
+                        daftarJudulBab[nomorBab] = window.kontenArtikel.judul;
+                        // Refresh tampilan daftar isi jika elemennya masih aktif
+                        if (currentIndex === 0 && document.querySelector('.toc-list')) {
+                            const spanEl = document.querySelector(`.toc-title[data-bab="${nomorBab}"]`);
+                            if (spanEl) {
+                                spanEl.innerHTML = `<b>Bab ${nomorBab}</b> — ${window.kontenArtikel.judul}`;
+                            }
+                        }
+                    }
+                };
+                script.onerror = () => {
+                    const spanEl = document.querySelector(`.toc-title[data-bab="${nomorBab}"]`);
+                    if (spanEl) spanEl.innerHTML = `<b>Bab ${nomorBab}</b> — *(Belum tersedia)*`;
+                };
+                document.body.appendChild(script);
+            }
+
+            // 2. Fungsi Memuat Isi Bab Penuh Saat Diklik
             function muatBab(nomorBab) {
-                // Hapus script bab sebelumnya jika ada agar tidak bentrok
                 const oldScript = document.getElementById('active-article-script');
                 if (oldScript) oldScript.remove();
 
-                // Buat tag script baru untuk meload file dari folder artikel/
                 const script = document.createElement('script');
                 script.id = 'active-article-script';
                 script.src = `artikel/artikel${nomorBab}.js`;
                 
                 script.onload = () => {
-                    // Setelah file .js sukses dimuat, jalankan generator halaman buku
                     generateBuku(nomorBab, window.kontenArtikel);
                 };
-
                 script.onerror = () => {
-                    alert(`Gagal memuat Bab ${nomorBab}. Pastikan file artikel/artikel${nomorBab}.js sudah ada.`);
+                    alert(`File artikel/artikel${nomorBab}.js belum dibuat atau tidak ditemukan.`);
                 };
-
                 document.body.appendChild(script);
             }
 
-            // 3. Generator Halaman Otomatis (Auto-Pagination) Berdasarkan Konten Artikel
+            // 3. Generator Halaman Buku (Auto-Pagination)
             function generateBuku(nomorBab, data) {
                 wrapper.innerHTML = '';
                 
-                // Halaman 1: Cover Bab & Gambar Ilustrasi
+                // Halaman 1: Cover Bab & Gambar
                 const pageCover = document.createElement('div');
                 pageCover.className = 'page page-cover';
                 pageCover.innerHTML = `
-                    <h3>${data.bab}</h3>
-                    <h1 style="font-size: 1.2rem; margin-bottom: 15px;">${data.judul}</h1>
-                    <img src="images/gambar${nomorBab}.jpg" alt="Ilustrasi ${data.bab}" onerror="this.src='images/gambar1.jpg'">
-                    <div style="margin-top: 15px;"><button id="back-to-menu" class="chapter-btn" style="background:#666;">← Kembali ke Daftar Isi</button></div>
+                    <h3>${data.bab || 'Bab ' + nomorBab}</h3>
+                    <h1 style="font-size: 1.1rem; margin: 10px 0; color: #2c3e50;">${data.judul}</h1>
+                    <img src="images/gambar${nomorBab}.jpg" alt="Ilustrasi Bab ${nomorBab}" onerror="this.src='images/gambar1.jpg'">
+                    <div style="margin-top: 15px;"><button class="back-menu-btn">← Daftar Isi</button></div>
                     <div class="page-number">1</div>
                 `;
                 wrapper.appendChild(pageCover);
 
-                // Halaman Artikel Berikutnya
+                // Halaman Artikel Beriktunya
                 let currentPage = document.createElement('div');
                 currentPage.className = 'page';
                 let pageNum = 2;
                 
-                let contentHTML = `<h2>${data.bab}: ${data.judul}</h2>`;
+                let contentHTML = `<h2>${data.bab || 'Bab ' + nomorBab}: ${data.judul}</h2>`;
                 currentPage.innerHTML = contentHTML + `<div class="page-number">${pageNum}</div>`;
                 wrapper.appendChild(currentPage);
 
-                // Algoritma pemecah paragraf otomatis agar pas di layout A5 HP
                 data.paragraf.forEach((teks) => {
                     let p = document.createElement('p');
                     p.textContent = teks;
                     currentPage.insertBefore(p, currentPage.lastElementChild);
 
-                    // Jika tinggi teks melebihi batas layar HP, pindahkan ke halaman baru
                     if (currentPage.scrollHeight > currentPage.clientHeight) {
                         currentPage.removeChild(p);
                         pageNum++;
@@ -122,17 +159,21 @@
                     }
                 });
 
-                // Tambahkan tombol navigasi kembali ke menu di halaman terakhir bab
+                // Tombol kembali ke daftar isi di halaman terakhir bab
                 let lastPage = wrapper.lastElementChild;
                 let backMenuDiv = document.createElement('div');
-                backMenuDiv.style.marginTop = "20px";
-                backMenuDiv.innerHTML = `<button class="chapter-btn" style="background:#555; width:100%;">Menu Utama</button>`;
+                backMenuDiv.style.marginTop = "15px";
+                backMenuDiv.innerHTML = `<button class="back-menu-btn" style="width:100%;">Kembali ke Daftar Isi</button>`;
                 lastPage.insertBefore(backMenuDiv, lastPage.lastElementChild);
-                backMenuDiv.querySelector('button').addEventListener('click', tampilkanDaftarIsi);
 
-                pageCover.querySelector('#back-to-menu').addEventListener('click', tampilkanDaftarIsi);
+                // Pasang event kembali ke menu
+                document.querySelectorAll('.back-menu-btn').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        currentIndex = 0;
+                        tampilkanDaftarIsi();
+                    });
+                });
 
-                // Aktifkan Navigasi Tombol Samping & Tampilkan Buku
                 pages = document.querySelectorAll('.page');
                 currentIndex = 0;
                 updateNavigasi();
@@ -154,7 +195,7 @@
                 if (currentIndex > 0) { currentIndex--; updateNavigasi(); }
             });
 
-            // Inisialisasi awal saat situs dibuka (muncul daftar isi)
+            // Jalankan awal
             tampilkanDaftarIsi();
         });
     </script>
