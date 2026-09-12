@@ -1,390 +1,112 @@
+/* style.css - Layout dan Tampilan Buku */
 :root {
-  --bg-workspace: #121110;
-  --paper-cream: #fcfaf5;
-  --paper-edge: #eae4d5;
-  --paper-line: #ded8c8;
-  --hijau-kusam: #384d3e;
-  --hijau-muda: #e4ebe6;
-  --merah-bata: #b24130;
-  --hitam-teks: #211f1c;
-  --abu-teks: #69655c;
-  --margin-top: 10mm;
-  --margin-bottom: 9mm;
-  --margin-outer: 13mm;
-  --margin-inner: 18mm;
+    --book-width: 100vw;
+    --book-height: 100vh;
 }
 
 * {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
 body {
-  background-color: var(--bg-workspace);
-  background-image: 
-    radial-gradient(circle at 50% 30%, rgba(255, 255, 255, 0.04) 0%, transparent 70%),
-    linear-gradient(to bottom, #161514, #0d0d0c);
-  font-family: 'Lora', Georgia, serif;
-  color: var(--hitam-teks);
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 1.5rem 0.5rem;
-  overflow-y: auto;
-  user-select: none;
-  touch-action: pan-y pinch-zoom;
+    background-color: #2b2b2b;
+    color: #333;
+    font-family: 'Times New Roman', Times, serif, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    overflow: hidden;
 }
 
-/* Kanvas Buku Berdimensi A5 */
-.book-viewport {
-  position: relative;
-  height: min(210mm, 88vh);
-  width: calc(min(210mm, 88vh) / 1.414);
-  max-width: 92vw;
-  background: var(--paper-cream);
-  border-radius: 3px 10px 10px 3px;
-  cursor: pointer;
-  box-shadow: 
-    0 30px 60px -12px rgba(0, 0, 0, 0.85),
-    0 15px 25px -5px rgba(0, 0, 0, 0.6),
-    4px 0 0 0 var(--paper-edge),
-    5px 0 1px 0 rgba(0, 0, 0, 0.15),
-    8px 0 0 0 #f0ebdf,
-    9px 0 1px 0 rgba(0, 0, 0, 0.1),
-    12px 0 0 0 #e8e2d4,
-    13px 0 2px 0 rgba(0, 0, 0, 0.2),
-    0 4px 0 0 var(--paper-edge),
-    0 7px 0 0 #e8e2d4,
-    0 8px 3px 0 rgba(0, 0, 0, 0.35),
-    inset 24px 0 35px -8px rgba(0, 0, 0, 0.16),
-    inset 6px 0 8px -2px rgba(0, 0, 0, 0.22);
-  overflow: hidden;
+/* Kontainer Utama Buku */
+#book-container {
+    width: 100%;
+    max-width: 480px; /* Lebar maksimal rata-rata HP */
+    height: 100%;
+    max-height: 850px; /* Tinggi maksimal rata-rata HP */
+    background: #fdfbf7; /* Warna kertas buku */
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    position: relative;
+    overflow: hidden;
+    display: flex;
 }
 
-.book-viewport::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  width: 14px;
-  background: linear-gradient(to right, 
-    rgba(0,0,0,0.2) 0%, 
-    rgba(0,0,0,0.06) 40%, 
-    rgba(255,255,255,0.25) 75%, 
-    transparent 100%);
-  z-index: 50;
-  pointer-events: none;
+/* Desain per Halaman Buku */
+.page {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: #fdfbf7;
+    padding: 25px 20px 30px 25px; /* Margin atas, bawah, kiri, kanan tetap (gaya A5) */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    backface-visibility: hidden;
+    border-left: 1px solid #e0dad0;
+    box-shadow: inset 15px 0 15px -10px rgba(0,0,0,0.05); /* Efek lengkungan buku */
+    overflow: hidden;
 }
 
-.page-sheet {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  padding-top: var(--margin-top);
-  padding-bottom: var(--margin-bottom);
-  padding-left: var(--margin-inner);
-  padding-right: var(--margin-outer);
-  display: none;
-  flex-direction: column;
-  justify-content: space-between;
-  background: var(--paper-cream);
+/* Halaman Cover / Ilustrasi */
+.page-cover {
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    background: #f4efe6;
 }
 
-.page-sheet.active {
-  display: flex;
+.page-cover img {
+    max-width: 100%;
+    max-height: 80vh;
+    object-fit: contain;
+    border: 1px solid #ccc;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 
-.running-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-family: 'Plus Jakarta Sans', sans-serif;
-  font-size: 0.62rem;
-  text-transform: uppercase;
-  letter-spacing: 1.5px;
-  color: var(--abu-teks);
-  border-bottom: 1px solid var(--paper-line);
-  padding-bottom: 1.8mm;
-  margin-bottom: 2mm;
-  flex-shrink: 0;
+/* Tipografi Isi Artikel */
+.page h2 {
+    font-size: 1.15rem;
+    margin-bottom: 12px;
+    color: #1a1a1a;
+    border-bottom: 1px solid #dcd6cd;
+    padding-bottom: 4px;
 }
 
-.running-footer {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-family: 'Plus Jakarta Sans', sans-serif;
-  font-size: 0.72rem;
-  font-weight: 700;
-  color: var(--abu-teks);
-  border-top: 1px solid var(--paper-line);
-  padding-top: 1.8mm;
-  margin-top: auto;
-  flex-shrink: 0;
+.page p {
+    font-size: 0.92rem;
+    line-height: 1.5;
+    text-align: justify;
+    margin-bottom: 10px;
+    text-indent: 1.5em; /* Awal paragraf menjorok ke dalam */
 }
 
-.sheet-body {
-  flex: 1;
-  min-height: 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  overflow-y: auto;
-  scrollbar-width: none;
+/* Nomor Halaman di Bawah */
+.page-number {
+    position: absolute;
+    bottom: 15px;
+    right: 25px;
+    font-size: 0.75rem;
+    color: #777;
 }
 
-.sheet-body::-webkit-scrollbar {
-  display: none;
+/* Tombol Navigasi Sederhana di Layar */
+.nav-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0,0,0,0.2);
+    color: white;
+    border: none;
+    padding: 15px 10px;
+    cursor: pointer;
+    z-index: 1000;
+    font-size: 1rem;
+    border-radius: 4px;
 }
-
-/* Khusus Sheet Body Halaman Pembuka Bab Full Ilustrasi */
-.sheet-body.chapter-cover-body {
-  justify-content: space-between;
-}
-
-.chapter-cover-header {
-  margin-bottom: 0.35rem;
-  flex-shrink: 0;
-}
-
-.chapter-badge {
-  font-family: 'Plus Jakarta Sans', sans-serif;
-  font-size: 0.72rem;
-  font-weight: 700;
-  color: var(--merah-bata);
-  text-transform: uppercase;
-  letter-spacing: 1.5px;
-}
-
-.chapter-title {
-  font-family: 'Cinzel', serif;
-  font-size: 1.18rem;
-  color: var(--hijau-kusam);
-  line-height: 1.15;
-  margin-top: 0.15rem;
-}
-
-/* Bingkai Gambar Full Halaman yang Mengisi Ruang Tengah */
-.artwork-full-page {
-  flex: 1;
-  width: 100%;
-  min-height: 55mm;
-  background: #eee8db;
-  border: 1px solid var(--paper-line);
-  border-radius: 4px;
-  padding: 0.25rem;
-  margin: 0.35rem 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.artwork-full-page img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 2px;
-  display: block;
-}
-
-.chapter-quote-box {
-  flex-shrink: 0;
-}
-
-.official-quote {
-  border-left: 3px solid var(--merah-bata);
-  background: #f7ede8;
-  padding: 0.45rem 0.65rem;
-  font-style: italic;
-  color: #4a2b25;
-  font-size: 0.72rem;
-  line-height: 1.38;
-  margin: 0.2rem 0;
-  border-radius: 0 4px 4px 0;
-}
-
-.official-quote footer {
-  font-style: normal;
-  font-size: 0.6rem;
-  color: var(--abu-teks);
-  margin-top: 0.15rem;
-  font-family: 'Plus Jakarta Sans', sans-serif;
-}
-
-.chapter-caption {
-  font-family: 'Plus Jakarta Sans', sans-serif;
-  font-size: 0.68rem;
-  color: var(--abu-teks);
-  text-align: center;
-  font-weight: 600;
-  margin-top: 0.2rem;
-}
-
-/* Elemen Teks Standar */
-p {
-  font-size: 0.75rem;
-  line-height: 1.45;
-  text-align: justify;
-  text-justify: inter-word;
-  margin-bottom: 0.38rem;
-  color: #24221f;
-}
-
-.editorial-box {
-  font-family: 'Plus Jakarta Sans', sans-serif;
-  font-size: 0.64rem;
-  color: var(--hijau-kusam);
-  text-align: center;
-  border-top: 1px dashed var(--paper-line);
-  border-bottom: 1px dashed var(--paper-line);
-  padding: 0.25rem 0.4rem;
-  margin: 0.25rem 0;
-  background: rgba(228, 235, 230, 0.4);
-}
-
-.editorial-box strong {
-  display: block;
-  color: var(--merah-bata);
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  font-size: 0.58rem;
-  margin-bottom: 0.08rem;
-}
-
-.chapter-end-box {
-  background: var(--hijau-muda);
-  border-radius: 4px;
-  padding: 0.5rem 0.7rem;
-  border-left: 3px solid var(--hijau-kusam);
-  font-size: 0.73rem;
-  line-height: 1.4;
-  margin-top: 0.3rem;
-}
-
-.chapter-end-box strong {
-  display: block;
-  font-family: 'Plus Jakarta Sans', sans-serif;
-  font-size: 0.62rem;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  color: var(--hijau-kusam);
-  margin-bottom: 0.15rem;
-}
-
-.next-cue {
-  text-align: right;
-  font-family: 'Plus Jakarta Sans', sans-serif;
-  font-size: 0.62rem;
-  color: var(--merah-bata);
-  font-weight: 600;
-  letter-spacing: 0.5px;
-  margin-top: auto;
-  margin-bottom: 0.2rem;
-  opacity: 0.85;
-}
-
-/* Cover Styling */
-.page-sheet.cover-page {
-  background: var(--hijau-kusam);
-  color: #fff;
-  padding: 8mm 12mm 6mm;
-  text-align: center;
-  justify-content: space-between;
-  align-items: center;
-  border-right: 5px solid var(--merah-bata);
-}
-
-.cover-header .badge {
-  display: inline-block;
-  font-family: 'Plus Jakarta Sans', sans-serif;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  font-size: 0.6rem;
-  font-weight: 700;
-  background: var(--merah-bata);
-  padding: 0.2rem 0.6rem;
-  border-radius: 20px;
-  margin-bottom: 0.25rem;
-}
-
-.cover-header h1 {
-  font-family: 'Cinzel', serif;
-  font-size: 1.6rem;
-  line-height: 1.05;
-  letter-spacing: 1.5px;
-  margin-bottom: 0.15rem;
-}
-
-.cover-header h2 {
-  font-family: 'Lora', serif;
-  font-style: italic;
-  font-size: 0.76rem;
-  font-weight: 400;
-  color: var(--hijau-muda);
-  line-height: 1.25;
-  max-width: 110mm;
-  margin: 0 auto;
-}
-
-.cover-portrait-box {
-  width: 48mm;
-  height: 60mm;
-  margin: 0.2rem auto;
-  border: 2px solid rgba(255, 255, 255, 0.25);
-  border-radius: 6px;
-  padding: 3px;
-  background: rgba(0, 0, 0, 0.3);
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
-}
-
-.cover-portrait-box img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 4px;
-  display: block;
-  filter: contrast(1.05);
-}
-
-.cover-stats {
-  display: flex;
-  justify-content: center;
-  gap: 1.2rem;
-  border-top: 1px solid rgba(255,255,255,0.2);
-  border-bottom: 1px solid rgba(255,255,255,0.2);
-  padding: 0.25rem 0;
-  width: 100%;
-  font-family: 'Plus Jakarta Sans', sans-serif;
-}
-
-.cover-stats .item .num {
-  display: block;
-  font-size: 1.05rem;
-  font-weight: 700;
-}
-
-.cover-stats .item .lbl {
-  font-size: 0.55rem;
-  text-transform: uppercase;
-  letter-spacing: 1.2px;
-  color: var(--hijau-muda);
-}
-
-.cover-bottom {
-  width: 100%;
-}
-
-.cover-bottom p {
-  font-size: 0.65rem;
-  color: #d2ded5;
-  text-align: center;
-  font-family: 'Plus Jakarta Sans', sans-serif;
-  line-height: 1.25;
-  margin-bottom: 0.15rem;
-}
+#prev-btn { left: 5px; }
+#next-btn { right: 5px; }
