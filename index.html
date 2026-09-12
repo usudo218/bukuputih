@@ -1,188 +1,243 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PDF Flipbook Interaktif</title>
-
-  <!-- Pustaka PDF.js (CDN) -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-  <!-- Pustaka Page-Flip (CDN) -->
-  <script src="https://cdn.jsdelivr.net/npm/page-flip/dist/js/page-flip.browser.js"></script>
-
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    body {
-      background-color: #1e293b;
-      font-family: sans-serif;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 20px 10px;
-    }
-
-    #loading {
-      color: #f1f5f9;
-      font-size: 16px;
-      margin-bottom: 12px;
-    }
-
-    .flipbook-container {
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
-      border-radius: 4px;
-      background-color: #334155;
-      display: none; /* Muncul setelah PDF selesai dirender */
-    }
-
-    /* Tiap kanvas halaman */
-    .page {
-      background-color: #ffffff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-    }
-
-    .page canvas {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-    }
-
-    /* Kontrol navigasi */
-    .controls {
-      margin-top: 18px;
-      display: none;
-      align-items: center;
-      gap: 16px;
-    }
-
-    button {
-      background-color: #3b82f6;
-      color: #ffffff;
-      border: none;
-      padding: 8px 18px;
-      border-radius: 6px;
-      font-weight: 600;
-      cursor: pointer;
-      font-size: 13px;
-    }
-
-    button:hover {
-      background-color: #2563eb;
-    }
-
-    .page-indicator {
-      color: #f1f5f9;
-      font-size: 13px;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Buku Digital Full Screen</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <div id="loading">Loading... Harap tunggu sebentar.</div>
+    <div id="book-container">
+        <!-- Zona Klik Sisi Kiri & Kanan untuk Ganti Halaman -->
+        <div id="click-left" class="nav-click-zone" title="Halaman Sebelumnya"></div>
+        <div id="click-right" class="nav-click-zone" title="Halaman Berikutnya"></div>
 
-  <!-- Wadah Flipbook -->
-  <div id="flipbook" class="flipbook-container"></div>
-<!-- Tombol Navigasi -->
-  <div class="controls" id="controls">
-    <button id="btn-prev">&larr; Halaman Sebelumnya</button>
-    <div class="page-indicator" id="page-num">Halaman 1</div>
-    <button id="btn-next">Halaman Berikutnya &rarr;</button>
-  </div>
- 
+        <!-- Kontainer Halaman Buku & Daftar Isi -->
+        <div id="pages-wrapper"></div>
+    </div>
 
-  <script>
-    // Tentukan path berkas PDF Anda
-    const pdfUrl = 'buku.pdf'; 
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const wrapper = document.getElementById('pages-wrapper');
+            let pages = [];
+            let currentIndex = 0;
+            let daftarJudulBab = {};
 
-    // Konfigurasi worker PDF.js
-    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+            // 1. Tampilkan Daftar Isi Buku
+            function tampilkanDaftarIsi() {
+                wrapper.innerHTML = '';
 
-    async function initPdfFlipbook() {
-      try {
-        const loadingTask = pdfjsLib.getDocument(pdfUrl);
-        const pdf = await loadingTask.promise;
-        const totalPages = pdf.numPages;
-        const bookElem = document.getElementById('flipbook');
+                let menuPage = document.createElement('div');
+                menuPage.className = 'page page-cover';
+                
+                let htmlMenu = `<h2>Daftar Isi</h2><div class="toc-list">`;
+                
+                for (let i = 1; i <= 9; i++) {
+                    let judulTampil = daftarJudulBab[i] || `Memuat Bab ${i}...`;
+                    htmlMenu += `
+                        <div class="toc-item">
+                            <span class="toc-title" data-bab="${i}"><b>Bab ${i}</b> — ${judulTampil}</span>
+                        </div>
+                    `;
+                }
+                htmlMenu += `</div><div class="page-number">1</div>`;
+                
+                menuPage.innerHTML = htmlMenu;
+                wrapper.appendChild(menuPage);
 
-        // Ambil dimensi asli halaman pertama untuk menentukan rasio flipbook
-        const firstPage = await pdf.getPage(1);
-        const viewport = firstPage.getViewport({ scale: 1.5 });
-        const pageWidth = Math.round(viewport.width);
-        const pageHeight = Math.round(viewport.height);
+                for (let i = 1; i <= 9; i++) {
+                    if (!daftarJudulBab[i]) {
+                        loadJudulArtikel(i);
+                    }
+                }
 
-        // Render seluruh halaman PDF menjadi elemen canvas
-        for (let num = 1; num <= totalPages; num++) {
-          const page = await pdf.getPage(num);
-          const pageViewport = page.getViewport({ scale: 1.5 });
+                document.querySelectorAll('.toc-title').forEach(el => {
+                    el.addEventListener('click', (e) => {
+                        let nomorBab = e.target.getAttribute('data-bab') || e.target.closest('.toc-title').getAttribute('data-bab');
+                        muatBab(nomorBab);
+                    });
+                });
+            }
 
-          const pageDiv = document.createElement('div');
-          pageDiv.className = 'page';
+            // Fungsi Ambil Metadata Judul Bab
+            function loadJudulArtikel(nomorBab) {
+                const scriptId = `temp-script-${nomorBab}`;
+                if (document.getElementById(scriptId)) return;
 
-          const canvas = document.createElement('canvas');
-          const context = canvas.getContext('2d');
-          canvas.height = pageViewport.height;
-          canvas.width = pageViewport.width;
+                const script = document.createElement('script');
+                script.id = scriptId;
+                script.src = `artikel/artikel${nomorBab}.js?v=` + new Date().getTime();
+                
+                script.onload = () => {
+                    if (window.kontenArtikel) {
+                        daftarJudulBab[nomorBab] = window.kontenArtikel.judul;
+                        const spanEl = document.querySelector(`.toc-title[data-bab="${nomorBab}"]`);
+                        if (spanEl) {
+                            spanEl.innerHTML = `<b>Bab ${nomorBab}</b> — ${window.kontenArtikel.judul}`;
+                        }
+                        window.kontenArtikel = null; 
+                    }
+                };
+                script.onerror = () => {
+                    const spanEl = document.querySelector(`.toc-title[data-bab="${nomorBab}"]`);
+                    if (spanEl) spanEl.innerHTML = `<b>Bab ${nomorBab}</b> — *(File artikel${nomorBab}.js belum ada)*`;
+                };
+                document.body.appendChild(script);
+            }
 
-          await page.render({
-            canvasContext: context,
-            viewport: pageViewport
-          }).promise;
+            // 2. Fungsi Memuat Isi Bab Penuh
+            function muatBab(nomorBab) {
+                const oldScript = document.getElementById('active-article-script');
+                if (oldScript) oldScript.remove();
 
-          pageDiv.appendChild(canvas);
-          bookElem.appendChild(pageDiv);
-        }
+                window.kontenArtikel = null;
 
-        // Sembunyikan pesan loading dan tampilkan buku
-        document.getElementById('loading').style.display = 'none';
-        bookElem.style.display = 'block';
-        document.getElementById('controls').style.display = 'flex';
+                const script = document.createElement('script');
+                script.id = 'active-article-script';
+                script.src = `artikel/artikel${nomorBab}.js?v=` + new Date().getTime();
+                
+                script.onload = () => {
+                    setTimeout(() => {
+                        if (window.kontenArtikel) {
+                            generateBuku(nomorBab, window.kontenArtikel);
+                        } else {
+                            alert(`File artikel/artikel${nomorBab}.js tidak valid.`);
+                        }
+                    }, 50);
+                };
 
-        // Inisialisasi Page-Flip
-        const pageFlip = new St.PageFlip(bookElem, {
-          width: pageWidth / 1.5,
-          height: pageHeight / 1.5,
-          size: 'stretch',
-          minWidth: 320,
-          maxWidth: 600,
-          minHeight: 450,
-          maxHeight: 850,
-          showCover: true,
-          useMouseEvents: true
+                script.onerror = () => {
+                    let dummyData = {
+                        bab: `Bab ${nomorBab}`,
+                        judul: `Judul Artikel Bab ${nomorBab} (Contoh Sementara)`,
+                        paragraf: [
+                            `Ini adalah paragraf contoh untuk menguji tata letak halaman Bab ${nomorBab} karena file fisik artikel${nomorBab}.js belum ditemukan.`,
+                            "Pastikan Anda membuat file artikel dengan nama yang sesuai di dalam folder artikel/."
+                        ]
+                    };
+                    generateBuku(nomorBab, dummyData);
+                };
+                document.body.appendChild(script);
+            }
+
+            // 3. Generator Halaman Buku Full Screen (Auto-Pagination)
+            function generateBuku(nomorBab, data) {
+                wrapper.innerHTML = '';
+                
+                // Halaman Cover Bab & Gambar
+                const pageCover = document.createElement('div');
+                pageCover.className = 'page page-cover';
+                pageCover.innerHTML = `
+                    <h3>${data.bab || 'Bab ' + nomorBab}</h3>
+                    <h1 style="font-size: 1.1rem; margin: 8px 0; color: #2c3e50;">${data.judul}</h1>
+                    <img src="images/gambar${nomorBab}.jpg" alt="Ilustrasi Bab ${nomorBab}" 
+                         onerror="this.onerror=null; this.src='images/gambar1.jpg';">
+                    <div style="margin-top: 12px;"><button class="back-menu-btn">← Daftar Isi</button></div>
+                    <div class="page-number">1</div>
+                `;
+                wrapper.appendChild(pageCover);
+
+                let pageNum = 2;
+                let currentPage = document.createElement('div');
+                currentPage.className = 'page';
+                currentPage.innerHTML = `<h2>${data.bab || 'Bab ' + nomorBab}: ${data.judul}</h2><div class="page-number">${pageNum}</div>`;
+                wrapper.appendChild(currentPage);
+
+                const batasTinggiAman = currentPage.clientHeight - 50;
+
+                data.paragraf.forEach((teks, index) => {
+                    let p = document.createElement('p');
+                    p.textContent = teks;
+                    currentPage.insertBefore(p, currentPage.lastElementChild);
+
+                    if (currentPage.scrollHeight > batasTinggiAman) {
+                        currentPage.removeChild(p);
+                        pageNum++;
+                        
+                        currentPage = document.createElement('div');
+                        currentPage.className = 'page';
+                        currentPage.style.display = 'none';
+                        currentPage.innerHTML = `<div class="page-number">${pageNum}</div>`;
+                        
+                        if (index > 0) {
+                            let subTitle = document.createElement('h2');
+                            subTitle.style.fontSize = "0.9rem";
+                            subTitle.style.color = "#555";
+                            subTitle.style.marginBottom = "6px";
+                            subTitle.textContent = `${data.bab || 'Bab ' + nomorBab} (lanjutan)`;
+                            currentPage.insertBefore(subTitle, currentPage.lastElementChild);
+                        }
+
+                        currentPage.insertBefore(p, currentPage.lastElementChild);
+                        wrapper.appendChild(currentPage);
+                    }
+                });
+
+                let lastPage = wrapper.lastElementChild;
+                let backMenuDiv = document.createElement('div');
+                backMenuDiv.style.marginTop = "12px";
+                backMenuDiv.innerHTML = `<button class="back-menu-btn" style="width:100%;">Kembali ke Daftar Isi</button>`;
+                lastPage.insertBefore(backMenuDiv, lastPage.lastElementChild);
+
+                document.querySelectorAll('.back-menu-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        e.stopPropagation(); // Mencegah bentrok dengan klik halaman
+                        currentIndex = 0;
+                        tampilkanDaftarIsi();
+                    });
+                });
+
+                pages = document.querySelectorAll('.page');
+                currentIndex = 0;
+                updateNavigasi();
+            }
+
+            function updateNavigasi() {
+                pages.forEach((page, i) => {
+                    page.style.display = (i === currentIndex) ? 'flex' : 'none';
+                });
+            }
+
+            // Navigasi lewat Klik Sisi Kiri / Kanan Layar
+            document.getElementById('click-right').addEventListener('click', () => {
+                if (currentIndex < pages.length - 1) {
+                    currentIndex++;
+                    updateNavigasi();
+                }
+            });
+
+            document.getElementById('click-left').addEventListener('click', () => {
+                if (currentIndex > 0) {
+                    currentIndex--;
+                    updateNavigasi();
+                }
+            });
+
+            // Navigasi lewat Geser Layar (Touch Swipe untuk HP)
+            let touchStartX = 0;
+            let touchEndX = 0;
+
+            const container = document.getElementById('book-container');
+            container.addEventListener('touchstart', e => {
+                touchStartX = e.changedTouches[0].screenX;
+            });
+
+            container.addEventListener('touchend', e => {
+                touchEndX = e.changedTouches[0].screenX;
+                if (touchEndX < touchStartX - 50) {
+                    // Geser Kiri -> Halaman Berikutnya
+                    if (currentIndex < pages.length - 1) { currentIndex++; updateNavigasi(); }
+                }
+                if (touchEndX > touchStartX + 50) {
+                    // Geser Kanan -> Halaman Sebelumnya
+                    if (currentIndex > 0) { currentIndex--; updateNavigasi(); }
+                }
+            });
+
+            // Inisialisasi awal
+            tampilkanDaftarIsi();
         });
-
-        pageFlip.loadFromHTML(document.querySelectorAll('.page'));
-
-        const pageNumDisplay = document.getElementById('page-num');
-        pageFlip.on('flip', (e) => {
-          pageNumDisplay.innerText = `Halaman ${e.data + 1} dari ${pageFlip.getPageCount()}`;
-        });
-
-        // Kontrol tombol
-        document.getElementById('btn-prev').addEventListener('click', () => pageFlip.flipPrev());
-        document.getElementById('btn-next').addEventListener('click', () => pageFlip.flipNext());
-
-        // Kontrol keyboard
-        window.addEventListener('keydown', (e) => {
-          if (e.key === 'ArrowLeft') pageFlip.flipPrev();
-          if (e.key === 'ArrowRight') pageFlip.flipNext();
-        });
-
-      } catch (err) {
-        document.getElementById('loading').innerText = 'Gagal memuat PDF. Pastikan nama file sesuai dan dijalankan melalui local server.';
-        console.error(err);
-      }
-    }
-
-    document.addEventListener('DOMContentLoaded', initPdfFlipbook);
-  </script>
+    </script>
 </body>
 </html>
