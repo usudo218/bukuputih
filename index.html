@@ -25,10 +25,10 @@
             
             let pages = [];
             let currentIndex = 0;
-            let daftarJudulBab = {}; // Menyimpan judul bab yang berhasil dimuat
+            let daftarJudulBab = {};
 
-            // 1. Fungsi Memuat Semua Judul Bab untuk Daftar Isi
-            async function tampilkanDaftarIsi() {
+            // 1. Tampilkan Daftar Isi Buku
+            function tampilkanDaftarIsi() {
                 wrapper.innerHTML = '';
                 prevBtn.style.display = 'none';
                 nextBtn.style.display = 'none';
@@ -38,9 +38,7 @@
                 
                 let htmlMenu = `<h2>Daftar Isi</h2><div class="toc-list">`;
                 
-                // Looping untuk meload variabel dari artikel1.js sampai artikel9.js secara asinkron
                 for (let i = 1; i <= 9; i++) {
-                    // Jika judul belum tersimpan, buat placeholder atau load script-nya
                     let judulTampil = daftarJudulBab[i] || `Memuat Bab ${i}...`;
                     htmlMenu += `
                         <div class="toc-item">
@@ -53,14 +51,14 @@
                 menuPage.innerHTML = htmlMenu;
                 wrapper.appendChild(menuPage);
 
-                // Ambil data judul dari file artikel jika belum ada
+                // Ambil judul dari file artikel
                 for (let i = 1; i <= 9; i++) {
                     if (!daftarJudulBab[i]) {
                         loadJudulArtikel(i);
                     }
                 }
 
-                // Event listener klik pada daftar isi
+                // Event klik daftar isi
                 document.querySelectorAll('.toc-title').forEach(el => {
                     el.addEventListener('click', (e) => {
                         let nomorBab = e.target.getAttribute('data-bab') || e.target.closest('.toc-title').getAttribute('data-bab');
@@ -69,35 +67,34 @@
                 });
             }
 
-            // Fungsi helper untuk mengambil metadata judul dari file .js
+            // Fungsi Ambil Judul
             function loadJudulArtikel(nomorBab) {
-                const oldScript = document.getElementById(`temp-script-${nomorBab}`);
-                if (oldScript) oldScript.remove();
+                const scriptId = `temp-script-${nomorBab}`;
+                if (document.getElementById(scriptId)) return;
 
                 const script = document.createElement('script');
-                script.id = `temp-script-${nomorBab}`;
+                script.id = scriptId;
                 script.src = `artikel/artikel${nomorBab}.js`;
                 
                 script.onload = () => {
                     if (window.kontenArtikel) {
                         daftarJudulBab[nomorBab] = window.kontenArtikel.judul;
-                        // Refresh tampilan daftar isi jika elemennya masih aktif
-                        if (currentIndex === 0 && document.querySelector('.toc-list')) {
-                            const spanEl = document.querySelector(`.toc-title[data-bab="${nomorBab}"]`);
-                            if (spanEl) {
-                                spanEl.innerHTML = `<b>Bab ${nomorBab}</b> — ${window.kontenArtikel.judul}`;
-                            }
+                        const spanEl = document.querySelector(`.toc-title[data-bab="${nomorBab}"]`);
+                        if (spanEl) {
+                            spanEl.innerHTML = `<b>Bab ${nomorBab}</b> — ${window.kontenArtikel.judul}`;
                         }
+                        // Bersihkan memori window agar tidak bentrok antar bab
+                        window.kontenArtikel = null; 
                     }
                 };
                 script.onerror = () => {
                     const spanEl = document.querySelector(`.toc-title[data-bab="${nomorBab}"]`);
-                    if (spanEl) spanEl.innerHTML = `<b>Bab ${nomorBab}</b> — *(Belum tersedia)*`;
+                    if (spanEl) spanEl.innerHTML = `<b>Bab ${nomorBab}</b> — *(File artikel${nomorBab}.js belum ada)*`;
                 };
                 document.body.appendChild(script);
             }
 
-            // 2. Fungsi Memuat Isi Bab Penuh Saat Diklik
+            // 2. Fungsi Memuat Bab Penuh
             function muatBab(nomorBab) {
                 const oldScript = document.getElementById('active-article-script');
                 if (oldScript) oldScript.remove();
@@ -107,19 +104,32 @@
                 script.src = `artikel/artikel${nomorBab}.js`;
                 
                 script.onload = () => {
-                    generateBuku(nomorBab, window.kontenArtikel);
+                    if (window.kontenArtikel) {
+                        generateBuku(nomorBab, window.kontenArtikel);
+                    } else {
+                        alert(`Format file artikel/artikel${nomorBab}.js tidak valid (window.kontenArtikel tidak ditemukan).`);
+                    }
                 };
                 script.onerror = () => {
-                    alert(`File artikel/artikel${nomorBab}.js belum dibuat atau tidak ditemukan.`);
+                    // Fallback otomatis jika file .js belum dibuat, agar Anda tetap bisa tes layout
+                    let dummyData = {
+                        bab: `Bab ${nomorBab}`,
+                        judul: `Judul Artikel Bab ${nomorBab} (Contoh Sementara)`,
+                        paragraf: [
+                            `Ini adalah paragraf contoh untuk menguji tata letak halaman Bab ${nomorBab} karena file fisik artikel${nomorBab}.js belum ditemukan di folder artikel/.`,
+                            "Pastikan Anda membuat file artikel dengan nama yang sesuai di dalam folder artikel agar teks aslinya dapat dimuat dengan sempurna di sini."
+                        ]
+                    };
+                    generateBuku(nomorBab, dummyData);
                 };
                 document.body.appendChild(script);
             }
 
-            // 3. Generator Halaman Buku (Auto-Pagination)
+            // 3. Generator Halaman Buku
             function generateBuku(nomorBab, data) {
                 wrapper.innerHTML = '';
                 
-                // Halaman 1: Cover Bab & Gambar
+                // Halaman Cover Bab
                 const pageCover = document.createElement('div');
                 pageCover.className = 'page page-cover';
                 pageCover.innerHTML = `
@@ -131,7 +141,7 @@
                 `;
                 wrapper.appendChild(pageCover);
 
-                // Halaman Artikel Beriktunya
+                // Halaman Isi Artikel
                 let currentPage = document.createElement('div');
                 currentPage.className = 'page';
                 let pageNum = 2;
@@ -159,14 +169,13 @@
                     }
                 });
 
-                // Tombol kembali ke daftar isi di halaman terakhir bab
+                // Tombol kembali di halaman akhir bab
                 let lastPage = wrapper.lastElementChild;
                 let backMenuDiv = document.createElement('div');
                 backMenuDiv.style.marginTop = "15px";
                 backMenuDiv.innerHTML = `<button class="back-menu-btn" style="width:100%;">Kembali ke Daftar Isi</button>`;
                 lastPage.insertBefore(backMenuDiv, lastPage.lastElementChild);
 
-                // Pasang event kembali ke menu
                 document.querySelectorAll('.back-menu-btn').forEach(btn => {
                     btn.addEventListener('click', () => {
                         currentIndex = 0;
@@ -195,7 +204,6 @@
                 if (currentIndex > 0) { currentIndex--; updateNavigasi(); }
             });
 
-            // Jalankan awal
             tampilkanDaftarIsi();
         });
     </script>
