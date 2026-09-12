@@ -3,124 +3,159 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Buku Digital - Bab 1</title>
+    <title>Buku Digital - 9 Bab</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
     <div id="book-container">
-        <!-- Tombol Navigasi Halaman -->
-        <button id="prev-btn" class="nav-btn">‹</button>
-        <button id="next-btn" class="nav-btn">›</button>
+        <!-- Tombol Navigasi Halaman Buku -->
+        <button id="prev-btn" class="nav-btn" style="display: none;">‹</button>
+        <button id="next-btn" class="nav-btn" style="display: none;">›</button>
 
-        <!-- Halaman akan digenerate secara dinamis di sini -->
+        <!-- Kontainer Halaman Buku & Daftar Isi -->
         <div id="pages-wrapper"></div>
     </div>
 
-    <!-- Memanggil data artikel terpisah -->
-    <script src="artikel.js"></script>
     <script>
         document.addEventListener("DOMContentLoaded", () => {
             const wrapper = document.getElementById('pages-wrapper');
+            const prevBtn = document.getElementById('prev-btn');
+            const nextBtn = document.getElementById('next-btn');
             
-            // 1. Buat Halaman 1: Gambar Ilustrasi (Cover Bab)
-            const pageCover = document.createElement('div');
-            pageCover.className = 'page page-cover';
-            pageCover.innerHTML = `
-                <img src="images/gambar1.jpg" alt="Ilustrasi Bab 1">
-                <div class="page-number">1</div>
-            `;
-            wrapper.appendChild(pageCover);
-
-            // 2. Buat Halaman Artikel secara Dinamis Berdasarkan Panjang Teks
-            let currentPage = document.createElement('div');
-            currentPage.className = 'page';
-            let pageNum = 2;
-            
-            // Tambahkan Judul di awal halaman artikel pertama
-            let contentHTML = `<h2>${kontenArtikel.judul}</h2>`;
-            
-            // Simulasi penampung sementara untuk menguji tinggi elemen
-            currentPage.innerHTML = contentHTML + `<div class="page-number">${pageNum}</div>`;
-            wrapper.appendChild(currentPage);
-
-            // Fungsi untuk memecah paragraf agar pas di dalam batas halaman HP
-            kontenArtikel.paragraf.forEach((teks) => {
-                let p = document.createElement('p');
-                p.textContent = teks;
-                
-                // Masukkan paragraf ke halaman aktif untuk diuji tingginya
-                currentPage.insertBefore(p, currentPage.lastElementChild);
-
-                // Cek apakah konten meluber (overflow) melewati batas tinggi halaman CSS
-                // (100vh dikurangi padding atas-bawah)
-                if (currentPage.scrollHeight > currentPage.clientHeight) {
-                    // Jika muatannya kepanjangan, tarik keluar paragraf tersebut
-                    currentPage.removeChild(p);
-                    
-                    // Buat halaman baru
-                    pageNum++;
-                    currentPage = document.createElement('div');
-                    currentPage.className = 'page';
-                    currentPage.style.display = 'none'; // Sembunyikan halaman lain awalnya
-                    
-                    // Masukkan paragraf ke halaman baru
-                    currentPage.innerHTML = `<div class="page-number">${pageNum}</div>`;
-                    currentPage.insertBefore(p, currentPage.firstChild);
-                    wrapper.appendChild(currentPage);
-                }
-            });
-
-            // 3. Logika Navigasi Buku (Bolak-balik halaman)
-            const pages = document.querySelectorAll('.page');
+            let pages = [];
             let currentIndex = 0;
 
-            function showPage(index) {
-                pages.forEach((page, i) => {
-                    page.style.display = (i === index) ? 'flex' : 'none';
+            // 1. Tampilkan Halaman Daftar Isi Utama (Menu Pilihan Bab 1 - 9)
+            function tampilkanDaftarIsi() {
+                wrapper.innerHTML = '';
+                prevBtn.style.display = 'none';
+                nextBtn.style.display = 'none';
+
+                let menuPage = document.createElement('div');
+                menuPage.className = 'page page-cover';
+                
+                let htmlMenu = `<h2>Daftar Isi Buku</h2><div class="menu-list">`;
+                for (let i = 1; i <= 9; i++) {
+                    htmlMenu += `<button class="chapter-btn" data-bab="${i}">Bab ${i}</button>`;
+                }
+                htmlMenu += `</div><div class="page-number">1</div>`;
+                
+                menuPage.innerHTML = htmlMenu;
+                wrapper.appendChild(menuPage);
+
+                // Event listener untuk tombol pilihan bab
+                document.querySelectorAll('.chapter-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        let nomorBab = e.target.getAttribute('data-bab');
+                        muatBab(nomorBab);
+                    });
                 });
             }
 
-            // Inisialisasi tampilkan halaman pertama
-            showPage(currentIndex);
+            // 2. Fungsi Memuat File Artikel dari Folder /artikel/ secara Dinamis
+            function muatBab(nomorBab) {
+                // Hapus script bab sebelumnya jika ada agar tidak bentrok
+                const oldScript = document.getElementById('active-article-script');
+                if (oldScript) oldScript.remove();
 
-            document.getElementById('next-btn').addEventListener('click', () => {
-                if (currentIndex < pages.length - 1) {
-                    currentIndex++;
-                    showPage(currentIndex);
-                }
-            });
+                // Buat tag script baru untuk meload file dari folder artikel/
+                const script = document.createElement('script');
+                script.id = 'active-article-script';
+                script.src = `artikel/artikel${nomorBab}.js`;
+                
+                script.onload = () => {
+                    // Setelah file .js sukses dimuat, jalankan generator halaman buku
+                    generateBuku(nomorBab, window.kontenArtikel);
+                };
 
-            document.getElementById('prev-btn').addEventListener('click', () => {
-                if (currentIndex > 0) {
-                    currentIndex--;
-                    showPage(currentIndex);
-                }
-            });
+                script.onerror = () => {
+                    alert(`Gagal memuat Bab ${nomorBab}. Pastikan file artikel/artikel${nomorBab}.js sudah ada.`);
+                };
 
-            // Dukungan geser layar sentuh (Swipe touch untuk HP)
-            let touchStartX = 0;
-            let touchEndX = 0;
-
-            document.getElementById('book-container').addEventListener('touchstart', e => {
-                touchStartX = e.changedTouches[0].screenX;
-            });
-
-            document.getElementById('book-container').addEventListener('touchend', e => {
-                touchEndX = e.changedTouches[0].screenX;
-                handleSwipe();
-            });
-
-            function handleSwipe() {
-                if (touchEndX < touchStartX - 50) {
-                    // Geser Kiri -> Halaman Berikutnya
-                    if (currentIndex < pages.length - 1) { currentIndex++; showPage(currentIndex); }
-                }
-                if (touchEndX > touchStartX + 50) {
-                    // Geser Kanan -> Halaman Sebelumnya
-                    if (currentIndex > 0) { currentIndex--; showPage(currentIndex); }
-                }
+                document.body.appendChild(script);
             }
+
+            // 3. Generator Halaman Otomatis (Auto-Pagination) Berdasarkan Konten Artikel
+            function generateBuku(nomorBab, data) {
+                wrapper.innerHTML = '';
+                
+                // Halaman 1: Cover Bab & Gambar Ilustrasi
+                const pageCover = document.createElement('div');
+                pageCover.className = 'page page-cover';
+                pageCover.innerHTML = `
+                    <h3>${data.bab}</h3>
+                    <h1 style="font-size: 1.2rem; margin-bottom: 15px;">${data.judul}</h1>
+                    <img src="images/gambar${nomorBab}.jpg" alt="Ilustrasi ${data.bab}" onerror="this.src='images/gambar1.jpg'">
+                    <div style="margin-top: 15px;"><button id="back-to-menu" class="chapter-btn" style="background:#666;">← Kembali ke Daftar Isi</button></div>
+                    <div class="page-number">1</div>
+                `;
+                wrapper.appendChild(pageCover);
+
+                // Halaman Artikel Berikutnya
+                let currentPage = document.createElement('div');
+                currentPage.className = 'page';
+                let pageNum = 2;
+                
+                let contentHTML = `<h2>${data.bab}: ${data.judul}</h2>`;
+                currentPage.innerHTML = contentHTML + `<div class="page-number">${pageNum}</div>`;
+                wrapper.appendChild(currentPage);
+
+                // Algoritma pemecah paragraf otomatis agar pas di layout A5 HP
+                data.paragraf.forEach((teks) => {
+                    let p = document.createElement('p');
+                    p.textContent = teks;
+                    currentPage.insertBefore(p, currentPage.lastElementChild);
+
+                    // Jika tinggi teks melebihi batas layar HP, pindahkan ke halaman baru
+                    if (currentPage.scrollHeight > currentPage.clientHeight) {
+                        currentPage.removeChild(p);
+                        pageNum++;
+                        
+                        currentPage = document.createElement('div');
+                        currentPage.className = 'page';
+                        currentPage.style.display = 'none';
+                        
+                        currentPage.innerHTML = `<div class="page-number">${pageNum}</div>`;
+                        currentPage.insertBefore(p, currentPage.firstChild);
+                        wrapper.appendChild(currentPage);
+                    }
+                });
+
+                // Tambahkan tombol navigasi kembali ke menu di halaman terakhir bab
+                let lastPage = wrapper.lastElementChild;
+                let backMenuDiv = document.createElement('div');
+                backMenuDiv.style.marginTop = "20px";
+                backMenuDiv.innerHTML = `<button class="chapter-btn" style="background:#555; width:100%;">Menu Utama</button>`;
+                lastPage.insertBefore(backMenuDiv, lastPage.lastElementChild);
+                backMenuDiv.querySelector('button').addEventListener('click', tampilkanDaftarIsi);
+
+                pageCover.querySelector('#back-to-menu').addEventListener('click', tampilkanDaftarIsi);
+
+                // Aktifkan Navigasi Tombol Samping & Tampilkan Buku
+                pages = document.querySelectorAll('.page');
+                currentIndex = 0;
+                updateNavigasi();
+            }
+
+            function updateNavigasi() {
+                pages.forEach((page, i) => {
+                    page.style.display = (i === currentIndex) ? 'flex' : 'none';
+                });
+                prevBtn.style.display = (currentIndex > 0) ? 'block' : 'none';
+                nextBtn.style.display = (currentIndex < pages.length - 1) ? 'block' : 'none';
+            }
+
+            nextBtn.addEventListener('click', () => {
+                if (currentIndex < pages.length - 1) { currentIndex++; updateNavigasi(); }
+            });
+
+            prevBtn.addEventListener('click', () => {
+                if (currentIndex > 0) { currentIndex--; updateNavigasi(); }
+            });
+
+            // Inisialisasi awal saat situs dibuka (muncul daftar isi)
+            tampilkanDaftarIsi();
         });
     </script>
 </body>
