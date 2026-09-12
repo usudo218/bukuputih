@@ -1,16 +1,14 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=no">
-  <title>Buku Putih - Responsive & Zoom Flipbook</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=3.0, user-scalable=yes">
+  <title>PDF Flipbook Interaktif</title>
 
-  <!-- Pustaka PDF.js -->
+  <!-- Pustaka PDF.js (CDN) -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-  <!-- Pustaka Page-Flip -->
+  <!-- Pustaka Page-Flip (CDN) -->
   <script src="https://cdn.jsdelivr.net/npm/page-flip/dist/js/page-flip.browser.js"></script>
-  <!-- Pustaka Panzoom untuk fitur Pinch & Double Tap Zoom -->
-  <script src="https://cdn.jsdelivr.net/npm/@panzoom/panzoom/dist/panzoom.min.js"></script>
 
   <style>
     * {
@@ -18,66 +16,43 @@
       margin: 0;
       padding: 0;
       -webkit-tap-highlight-color: transparent;
-      user-select: none;
     }
 
     body, html {
       width: 100%;
       height: 100%;
       overflow: hidden;
-      background-color: #0b0f19;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background-color: #0f172a;
+      font-family: sans-serif;
     }
 
-    #loading-layer {
-      position: fixed;
-      inset: 0;
-      background-color: #0b0f19;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      color: #94a3b8;
-      font-size: 14px;
-      z-index: 999;
-      gap: 12px;
+    /* Indikator Memuat */
+    #loading {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: #f8fafc;
+      font-size: 15px;
+      text-align: center;
+      z-index: 100;
+      pointer-events: none;
     }
 
-    .spinner {
-      width: 32px;
-      height: 32px;
-      border: 3px solid rgba(255, 255, 255, 0.1);
-      border-top-color: #38bdf8;
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
-    }
-
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-
-    /* Area Pandang Utama */
-    .viewport {
+    /* Pembungkus Layar Penuh */
+    .viewer-container {
       position: relative;
       width: 100vw;
       height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
-      overflow: hidden;
-    }
-
-    /* Elemen yang di-zoom oleh Panzoom */
-    #zoom-layer {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      touch-action: none;
+      touch-action: pan-y pinch-zoom;
     }
 
     .flipbook-container {
       display: none;
-      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.7);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
     }
 
     .page {
@@ -94,82 +69,55 @@
       object-fit: contain;
     }
 
-    /* Area Ketuk Sisi Layar untuk Pindah Halaman */
-    .touch-edge {
+    /* Area Klik Sentuh Sisi Kiri & Kanan Layar */
+    .touch-zone {
       position: absolute;
       top: 0;
       bottom: 0;
-      width: 20%;
-      z-index: 50;
+      width: 18%;
+      z-index: 40;
       cursor: pointer;
     }
 
-    .touch-edge.left {
+    .touch-left {
       left: 0;
     }
 
-    .touch-edge.right {
+    .touch-right {
       right: 0;
     }
 
-    /* Indikator Halaman dan Panduan Singkat */
-    .hud {
-      position: fixed;
+    /* Indikator Halaman Minimalis di Pojok Bawah */
+    .page-badge {
+      position: absolute;
       bottom: 12px;
-      left: 50%;
-      transform: translateX(-50%);
       background: rgba(15, 23, 42, 0.75);
-      color: #f1f5f9;
+      color: #f8fafc;
       font-size: 12px;
-      padding: 6px 14px;
+      padding: 4px 10px;
       border-radius: 20px;
-      z-index: 100;
+      z-index: 50;
       pointer-events: none;
-      backdrop-filter: blur(8px);
-      letter-spacing: 0.5px;
-    }
-
-    /* Tombol Reset Zoom jika sedang membesar */
-    #btn-reset-zoom {
-      position: fixed;
-      top: 14px;
-      right: 14px;
-      background: rgba(15, 23, 42, 0.85);
-      color: #38bdf8;
-      border: 1px solid rgba(56, 189, 248, 0.4);
-      font-size: 12px;
-      padding: 6px 12px;
-      border-radius: 16px;
-      z-index: 100;
-      display: none;
-      cursor: pointer;
-      backdrop-filter: blur(8px);
+      backdrop-filter: blur(4px);
     }
   </style>
 </head>
 <body>
 
-  <div id="loading-layer">
-    <div class="spinner"></div>
-    <div id="loading-text">Menyiapkan halaman buku...</div>
-  </div>
+  <div id="loading">Memuat lembaran buku...</div>
 
-  <button id="btn-reset-zoom">Reset Zoom (1x)</button>
+  <div class="viewer-container" id="viewer">
+    <!-- Area Sentuh Kiri (Sebelumnya) -->
+    <div class="touch-zone touch-left" id="tap-prev" title="Halaman Sebelumnya"></div>
 
-  <div class="viewport">
-    <!-- Area Sentuh Kiri -->
-    <div class="touch-edge left" id="touch-left"></div>
+    <!-- Kontainer Buku -->
+    <div id="flipbook" class="flipbook-container"></div>
 
-    <!-- Lapisan Pembesar / Zoomable -->
-    <div id="zoom-layer">
-      <div id="flipbook" class="flipbook-container"></div>
-    </div>
+    <!-- Area Sentuh Kanan (Selanjutnya) -->
+    <div class="touch-zone touch-right" id="tap-next" title="Halaman Selanjutnya"></div>
 
-    <!-- Area Sentuh Kanan -->
-    <div class="touch-edge right" id="touch-right"></div>
-
-    <!-- Info Lembar -->
-    <div class="hud" id="page-hud">1 / -</div>
+    <!-- Info Halaman Ringkas -->
+    <div class="page-badge" id="page-badge">1 / -</div>
   </div>
 
   <script>
@@ -177,23 +125,26 @@
     pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 
     let pageFlip = null;
-    let panzoomInstance = null;
-    let pdfAspect = 0.7;
 
-    async function setupFlipbook() {
+    async function initPdfFlipbook() {
       try {
         const loadingTask = pdfjsLib.getDocument(pdfUrl);
         const pdf = await loadingTask.promise;
         const totalPages = pdf.numPages;
         const bookElem = document.getElementById('flipbook');
 
-        // Mengambil dimensi asli halaman
+        // Ambil dimensi asli lembar PDF
         const firstPage = await pdf.getPage(1);
         const unscaledViewport = firstPage.getViewport({ scale: 1.0 });
-        pdfAspect = unscaledViewport.width / unscaledViewport.height;
+        const pdfAspect = unscaledViewport.width / unscaledViewport.height;
 
-        // Render Canvas dengan skala 2x agar teks tetap tajam saat di-zoom
-        const renderScale = Math.max(window.devicePixelRatio || 1, 2.0);
+        // Hitung batas ruang layar peramban
+        const screenW = window.innerWidth;
+        const screenH = window.innerHeight;
+        const isMobile = screenW <= 768;
+
+        // Render canvas berkualitas tinggi (2.0x) agar teks tetap tajam saat dizoom
+        const renderScale = window.devicePixelRatio > 1 ? 2.0 : 1.5;
 
         for (let num = 1; num <= totalPages; num++) {
           const page = await pdf.getPage(num);
@@ -216,150 +167,66 @@
           bookElem.appendChild(pageDiv);
         }
 
-        document.getElementById('loading-layer').style.display = 'none';
+        document.getElementById('loading').style.display = 'none';
         bookElem.style.display = 'block';
 
-        buildPageFlip();
-        setupPanzoom();
+        // Hitung proporsi ukuran buku agar pas memenuhi layar HP
+        let targetH = screenH * 0.96;
+        let targetW = targetH * pdfAspect;
+
+        if (targetW > screenW * 0.96) {
+          targetW = screenW * 0.96;
+          targetH = targetW / pdfAspect;
+        }
+
+        // Inisialisasi St.PageFlip
+        pageFlip = new St.PageFlip(bookElem, {
+          width: Math.round(targetW),
+          height: Math.round(targetH),
+          size: 'fixed',
+          showCover: !isMobile,
+          usePortrait: isMobile, // Kunci 1 halaman di layar HP agar ukuran maksimal
+          startPage: 0,
+          drawShadow: true,
+          useMouseEvents: true,
+          swipeDistance: 30, // Jarak usapan sentuh di HP
+          mobileScrollSupport: true
+        });
+
+        pageFlip.loadFromHTML(document.querySelectorAll('.page'));
+
+        const badge = document.getElementById('page-badge');
+        const updateBadge = (idx) => {
+          badge.innerText = `${idx + 1} / ${pageFlip.getPageCount()}`;
+        };
+        updateBadge(0);
+
+        pageFlip.on('flip', (e) => {
+          updateBadge(e.data);
+        });
+
+        // Event Navigasi Ketuk Sisi Layar
+        document.getElementById('tap-prev').addEventListener('click', () => {
+          pageFlip.flipPrev();
+        });
+
+        document.getElementById('tap-next').addEventListener('click', () => {
+          pageFlip.flipNext();
+        });
+
+        // Event Keyboard (Desktop)
+        window.addEventListener('keydown', (e) => {
+          if (e.key === 'ArrowLeft') pageFlip.flipPrev();
+          if (e.key === 'ArrowRight') pageFlip.flipNext();
+        });
 
       } catch (err) {
-        document.getElementById('loading-text').innerText = 'Gagal memuat berkas PDF. Pastikan nama file adalah buku.pdf';
+        document.getElementById('loading').innerText = 'Gagal memuat PDF. Pastikan file buku.pdf tersedia.';
         console.error(err);
       }
     }
 
-    function calculateDimensions() {
-      const sw = window.innerWidth;
-      const sh = window.innerHeight;
-      const isMobile = sw <= 768 || sw < sh;
-
-      let targetH = sh * 0.94;
-      let targetW = targetH * pdfAspect;
-
-      // Pastikan pas di lebar layar ponsel
-      if (targetW > sw * 0.94) {
-        targetW = sw * 0.94;
-        targetH = targetW / pdfAspect;
-      }
-
-      return {
-        w: Math.round(targetW),
-        h: Math.round(targetH),
-        isMobile: isMobile
-      };
-    }
-
-    function buildPageFlip() {
-      const { w, h, isMobile } = calculateDimensions();
-      const bookElem = document.getElementById('flipbook');
-
-      pageFlip = new St.PageFlip(bookElem, {
-        width: w,
-        height: h,
-        size: 'fixed',
-        showCover: !isMobile,
-        usePortrait: isMobile, // 1 Halaman di HP, 2 Halaman jika layar lebar
-        startPage: 0,
-        drawShadow: true,
-        useMouseEvents: true,
-        swipeDistance: 25,
-        mobileScrollSupport: true
-      });
-
-      pageFlip.loadFromHTML(document.querySelectorAll('.page'));
-
-      const hud = document.getElementById('page-hud');
-      const updateHud = (idx) => {
-        hud.innerText = `${idx + 1} / ${pageFlip.getPageCount()}`;
-      };
-      updateHud(0);
-
-      pageFlip.on('flip', (e) => updateHud(e.data));
-    }
-
-    function setupPanzoom() {
-      const zoomElem = document.getElementById('zoom-layer');
-      const resetBtn = document.getElementById('btn-reset-zoom');
-
-      panzoomInstance = Panzoom(zoomElem, {
-        maxScale: 4,
-        minScale: 1,
-        contain: 'outside',
-        disablePan: true // Matikan pan saat skala 1x agar usapan tidak bentrok dengan pembalik halaman
-      });
-
-      zoomElem.parentElement.addEventListener('wheel', panzoomInstance.zoomWithWheel);
-
-      // Tangani event zoom berubah
-      zoomElem.addEventListener('panzoomchange', (e) => {
-        const currentScale = e.detail.scale;
-        if (currentScale > 1.05) {
-          panzoomInstance.setOptions({ disablePan: false });
-          resetBtn.style.display = 'block';
-        } else {
-          panzoomInstance.setOptions({ disablePan: true });
-          resetBtn.style.display = 'none';
-        }
-      });
-
-      // Fitur Double Tap di Smartphone untuk Zoom Cepat
-      let lastTouchTime = 0;
-      zoomElem.addEventListener('touchend', (e) => {
-        const currentTime = new Date().getTime();
-        const tapInterval = currentTime - lastTouchTime;
-        if (tapInterval < 300 && tapInterval > 0) {
-          e.preventDefault();
-          if (panzoomInstance.getScale() > 1.2) {
-            panzoomInstance.reset();
-          } else {
-            panzoomInstance.zoomToPoint(2.2, {
-              clientX: e.changedTouches[0].clientX,
-              clientY: e.changedTouches[0].clientY
-            });
-          }
-        }
-        lastTouchTime = currentTime;
-      });
-
-      resetBtn.addEventListener('click', () => {
-        panzoomInstance.reset();
-      });
-
-      // Navigasi Ketuk Sisi Kiri / Kanan Layar (Hanya berfungsi saat skala 1x)
-      document.getElementById('touch-left').addEventListener('click', () => {
-        if (panzoomInstance.getScale() <= 1.05) {
-          pageFlip.flipPrev();
-        }
-      });
-
-      document.getElementById('touch-right').addEventListener('click', () => {
-        if (panzoomInstance.getScale() <= 1.05) {
-          pageFlip.flipNext();
-        }
-      });
-    }
-
-    // Tangani perubahan ukuran layar (misal rotasi HP)
-    let resizeTimer;
-    window.addEventListener('resize', () => {
-      clearTimeout(resizeTimer);
-      resizeTimer = setTimeout(() => {
-        if (pageFlip) {
-          const { w, h, isMobile } = calculateDimensions();
-          pageFlip.update({
-            width: w,
-            height: h,
-            usePortrait: isMobile,
-            showCover: !isMobile
-          });
-        }
-        if (panzoomInstance) {
-          panzoomInstance.reset();
-        }
-      }, 300);
-    });
-
-    document.addEventListener('DOMContentLoaded', setupFlipbook);
+    document.addEventListener('DOMContentLoaded', initPdfFlipbook);
   </script>
 </body>
 </html>
