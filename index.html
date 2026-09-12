@@ -99,32 +99,29 @@
                 const oldScript = document.getElementById('active-article-script');
                 if (oldScript) oldScript.remove();
 
+                window.kontenArtikel = null; // Reset data sebelumnya
+
                 const script = document.createElement('script');
                 script.id = 'active-article-script';
-                script.src = `artikel/artikel${nomorBab}.js`;
+                script.src = `artikel/artikel${nomorBab}.js?v=` + new Date().getTime(); // Mencegah cache browser
                 
                 script.onload = () => {
-                    if (window.kontenArtikel) {
-                        generateBuku(nomorBab, window.kontenArtikel);
-                    } else {
-                        alert(`Format file artikel/artikel${nomorBab}.js tidak valid (window.kontenArtikel tidak ditemukan).`);
-                    }
+                    // Beri jeda sepersekian detik agar objek global window benar-benar terikat
+                    setTimeout(() => {
+                        if (window.kontenArtikel) {
+                            generateBuku(nomorBab, window.kontenArtikel);
+                        } else {
+                            alert(`File artikel/artikel${nomorBab}.js berhasil dimuat, tetapi variabel window.kontenArtikel tidak terbaca.`);
+                        }
+                    }, 50);
                 };
+
                 script.onerror = () => {
-                    // Fallback otomatis jika file .js belum dibuat, agar Anda tetap bisa tes layout
-                    let dummyData = {
-                        bab: `Bab ${nomorBab}`,
-                        judul: `Judul Artikel Bab ${nomorBab} (Contoh Sementara)`,
-                        paragraf: [
-                            `Ini adalah paragraf contoh untuk menguji tata letak halaman Bab ${nomorBab} karena file fisik artikel${nomorBab}.js belum ditemukan di folder artikel/.`,
-                            "Pastikan Anda membuat file artikel dengan nama yang sesuai di dalam folder artikel agar teks aslinya dapat dimuat dengan sempurna di sini."
-                        ]
-                    };
-                    generateBuku(nomorBab, dummyData);
+                    alert(`File artikel/artikel${nomorBab}.js tidak ditemukan di dalam folder artikel/.`);
                 };
+                
                 document.body.appendChild(script);
             }
-
             // 3. Generator Halaman Buku
             function generateBuku(nomorBab, data) {
                 wrapper.innerHTML = '';
