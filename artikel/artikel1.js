@@ -1,6 +1,7 @@
-// artikel.js - Sumber Data Artikel Bab 1
-const kontenArtikel = {
-    judul: "BAB 1: DIFERENSIASI RASA PUTUS ASA",
+// artikel/artikel1.js
+window.kontenArtikel = {
+    bab: "BAB 1",
+    judul: "DIFERENSIASI RASA PUTUS ASA",
     paragraf: [
         "“Penuhilah kebutuhan belajar unik setiap murid. Rancanglah proses pembelajaran yang mengakomodasi gaya auditori, visual, dan kinestetik mereka secara merdeka dan menyenangkan.”",
         "— Dikutip dari slide pelatihan daring yang pematerinya mengajar di ruang ber-AC.",
