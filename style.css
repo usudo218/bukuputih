@@ -1,4 +1,4 @@
-/* style.css - Layout dan Tampilan Buku */
+/* style.css - Layout dan Tampilan Buku Digital (A5 Portrait Responsive HP) */
 :root {
     --book-width: 100vw;
     --book-height: 100vh;
@@ -42,7 +42,7 @@ body {
     top: 0;
     left: 0;
     background: #fdfbf7;
-    padding: 25px 20px 30px 25px; /* Margin atas, bawah, kiri, kanan tetap (gaya A5) */
+    padding: 25px 20px 35px 25px; /* Margin atas, bawah, kiri, kanan tetap (gaya A5) */
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
@@ -52,7 +52,7 @@ body {
     overflow: hidden;
 }
 
-/* Halaman Cover / Ilustrasi */
+/* Halaman Cover / Ilustrasi / Daftar Isi */
 .page-cover {
     justify-content: center;
     align-items: center;
@@ -60,9 +60,16 @@ body {
     background: #f4efe6;
 }
 
+.page-cover h2 {
+    font-size: 1.3rem;
+    margin-bottom: 10px;
+    color: #2c3e50;
+    border-bottom: none;
+}
+
 .page-cover img {
     max-width: 100%;
-    max-height: 80vh;
+    max-height: 55vh;
     object-fit: contain;
     border: 1px solid #ccc;
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
@@ -110,3 +117,30 @@ body {
 }
 #prev-btn { left: 5px; }
 #next-btn { right: 5px; }
+
+/* Styling Tombol Menu Daftar Isi & Navigasi Bab */
+.menu-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 85%;
+    max-height: 55vh;
+    overflow-y: auto;
+    margin: 15px 0;
+    padding-right: 5px;
+}
+
+.chapter-btn {
+    background: #4a6fa5;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.chapter-btn:hover {
+    background: #38537d;
+}
