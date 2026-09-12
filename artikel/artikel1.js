@@ -1,4 +1,3 @@
-// artikel/artikel1.js
 window.kontenArtikel = {
     bab: "BAB 1",
     judul: "DIFERENSIASI RASA PUTUS ASA",
